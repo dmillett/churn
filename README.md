@@ -28,6 +28,7 @@ Local remote and remote branches may also be updated from their defaults 'origin
 ```
 ###*installation:*
 Update your .bashrc file
+
 1. source "$path-to-script/git-simple-prompt.sh"
 2. PROMPT_COMMAND=git_simple_prompt
 
