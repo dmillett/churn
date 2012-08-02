@@ -175,13 +175,12 @@ function git_simple_prompt() {
 
       if [[ $has_remote != "" ]]; then
         diff_remote=`git diff $DEFAULT_REMOTE/$DEFAULT_REMOTE_BRANCH 2>&1`
-        echo "diff_remote: $diff_remote"
         if [[ $diff_remote != "" ]]; then
           merge_remote="true"
         fi
       fi
  
-      if [[ merge_remote == "true" ]]; then
+      if [[ $merge_remote == "true" ]]; then
         message=`build_git_suggestion "$untracked" "$MERGE"`
         color="$PURPLE_B"
       else
