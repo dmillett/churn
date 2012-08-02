@@ -1,32 +1,51 @@
 #!/bin/bash
 
-export SHOW_REPO="true"
-export SHOW_SUGGESTION="true"
-
+##
+# Update your .bashrc file
+# source "$path-to-script/git-simple-prompt.sh"
+# PROMPT_COMMAND=git_simple_prompt
 #
-# Whether or not to show the repo name in the git prompt
-# expects path $HOME/bash/bash-help/
-function git_prompt_toggle_repo() {
+# Please adjust 'DEFAULT_PROMPT' accordingly for non
+# git project directories. It defaults to the current
+# directory path.
+#
+# Use 'git_toggle_prompt' to enable/disable git prompt customization
+# Use 'git_toggle_prompt_suggestions' to hide excess verbiage in the prompt.
+#
+# Some useful defaults:
+# '\w': shows entire path
+# '\W': shows current directory
+# '\u': shows current user
+# '\s': the shell name (bash, sh, etc)
+# '\v': the shell version
+# '\h': the short host name (up to first '.')
+##
+DEFAULT_PROMPT="[\w]$ "
 
-  if [[ "$SHOW_REPO" == "true" ]]; then
-    echo "Setting SHOW_REPO to 'false'"
-    export $SHOW_REPO="false"
+
+GIT_PROMPT_ACTIVE="true"
+SHOW_SUGGESTION="true"
+
+function git_toggle_prompt() {
+
+  if [[ "$GIT_PROMPT_ACTIVE" == "true" ]]; then
+    echo "Local disabling of git prompt"
+    export GIT_PROMPT_ACTIVE="false"
   else
-    echo "Setting SHOW_REPO to 'true'"
-    export $SHOW_REPO="true"
+    echo "Local enabling of git prompt"
+    export GIT_PROMPT_ACTIVE="true"
   fi
 }
 
-#
 # Whether or not to show suggested git actions
-function git_prompt_toggle_suggestions() {
+function git_toggle_prompt_suggestions() {
 
   if [[ "$SHOW_SUGGESTION" == "true" ]]; then
-    echo "Setting SHOW_SUGGESTION to 'false'"
-    export $SHOW_SUGGESTION="false"
+    echo "Local disabling of git prompt suggestion(s)"
+    export SHOW_SUGGESTION="false"
   else
-    echo "Setting SHOW_SUGGESTION to 'true'"
-    export $SHOW_SUGGESTION="true"
+    echo "Local enabling of git prompt suggestion(s)"
+    export SHOW_SUGGESTION="true"
   fi
 }
 
@@ -99,30 +118,29 @@ ERROR_PATTERN="fatal: "
 # Ready for use
 function git_simple_prompt() {
 
-  #ps_default="$1 "
-  pscmd="[\u:\w]$ "
+  pscmd="$DEFAULT_PROMPT"
   status=`git status 2>&1`
   
   # It's a git project 
-  if [[ $status =~ $BRANCH_PATTERN ]]; then
+  if [[ "$GIT_PROMPT_ACTIVE" == "true" && $status =~ $BRANCH_PATTERN ]]; then
     branch="${BASH_REMATCH[1]}"
-    project=${PWD##*/}
+    project="\w"
 
     untracked=""
     if [[ $status =~ $UNTRACKED_PATTERN ]]; then
-      untracked=$EXTERNAL #"add"
+      untracked=$EXTERNAL
     fi
 
     color="$RESET"
 
     if [[ $status =~ $CHANGED_PATTERN ]]; then
-      message=`build_git_suggestion "$untracked" "$MODIFIED"` #"commit"`
+      message=`build_git_suggestion "$untracked" "$MODIFIED"`
       color="$BLUE_B" 
     elif [[ $status =~ $MODIFIED_PATTERN ]]; then
-      message=`build_git_suggestion "$untracked" "$MODIFIED"` #"commit"`
+      message=`build_git_suggestion "$untracked" "$MODIFIED"`
       color="$BLUE_B"
     elif [[ $status =~ $NEW_FILE_PATTERN ]]; then
-      message=`build_git_suggestion "$untracked" "$MODIFIED"` #"commit"`
+      message=`build_git_suggestion "$untracked" "$MODIFIED"`
       color="$BLUE_B"
     else
 
@@ -130,7 +148,7 @@ function git_simple_prompt() {
       has_remote=`git remote -v`
 
       if [[ $has_remote != "" ]]; then
-        diff_remote=`git diff origin/master`
+        diff_remote=`git diff origin/master 2>&1`
         if [[ $diff_remote != "" ]]; then
           push_rebase_merge="true"
         fi
@@ -145,7 +163,7 @@ function git_simple_prompt() {
       fi
     fi
 
-    pscmd="[${color}git@$project:$branch$message$RESET]> "
+    pscmd="[${color}$project:$branch$message$RESET]$ "
   fi
 
   export PS1="$pscmd"
@@ -153,4 +171,5 @@ function git_simple_prompt() {
 
 # .bashrc PROMPT_COMMAND relies on this
 export -f git_simple_prompt
-
+export -f git_toggle_prompt
+export -f git_toggle_prompt_suggestions
