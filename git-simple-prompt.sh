@@ -21,30 +21,56 @@
 # '\h': the short host name (up to first '.')
 ##
 DEFAULT_PROMPT="[\w]$ "
-
+DEFAULT_REMOTE="origin"
+DEFAULT_REMOTE_BRANCH="master"
 
 GIT_PROMPT_ACTIVE="true"
 SHOW_SUGGESTION="true"
 
-function git_toggle_prompt() {
+#
+# Changes the remote target. Default is 'origin'
+# $1: remote target name
+function git_prompt_remote() {
+  
+  if [[ "$1" != "origin" ]]; then
+    export DEFAULT_REMOTE="$1"
+  else
+    export DEFAULT_REMOTE="origin"
+  fi
+}
+
+#
+# Setting the remote branch. Default is 'master'
+# $1: the remote branch name
+function git_prompt_remote_branch() {
+  
+  if [[ "$1" != "master" ]]; then
+    export DEFAULT_REMOTE_BRANCH="$1"
+  else
+    export DEFAULT_REMOTE_BRANCH="master"
+  fi
+}
+
+#
+# Turns git prompt customization on/off in
+# the current shell
+function git_prompt_toggle() {
 
   if [[ "$GIT_PROMPT_ACTIVE" == "true" ]]; then
-    echo "Local disabling of git prompt"
     export GIT_PROMPT_ACTIVE="false"
   else
-    echo "Local enabling of git prompt"
     export GIT_PROMPT_ACTIVE="true"
   fi
 }
 
+# 
 # Whether or not to show suggested git actions
-function git_toggle_prompt_suggestions() {
+# in the current shell
+function git_prompt_toggle_suggestions() {
 
   if [[ "$SHOW_SUGGESTION" == "true" ]]; then
-    echo "Local disabling of git prompt suggestion(s)"
     export SHOW_SUGGESTION="false"
   else
-    echo "Local enabling of git prompt suggestion(s)"
     export SHOW_SUGGESTION="true"
   fi
 }
@@ -148,9 +174,10 @@ function git_simple_prompt() {
       has_remote=`git remote -v`
 
       if [[ $has_remote != "" ]]; then
-        diff_remote=`git diff origin/master 2>&1`
+        diff_remote=`git diff $DEFAULT_REMOTE/$DEFAULT_REMOTE_BRANCH 2>&1`
+        echo "diff_remote: $diff_remote"
         if [[ $diff_remote != "" ]]; then
-          push_rebase_merge="true"
+          merge_remote="true"
         fi
       fi
  
@@ -171,5 +198,7 @@ function git_simple_prompt() {
 
 # .bashrc PROMPT_COMMAND relies on this
 export -f git_simple_prompt
-export -f git_toggle_prompt
-export -f git_toggle_prompt_suggestions
+export -f git_prompt_toggle
+export -f git_prompt_toggle_suggestions
+export -f git_prompt_remote
+export -f git_prompt_remote_branch
