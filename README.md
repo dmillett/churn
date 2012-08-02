@@ -15,5 +15,7 @@ Update your .bashrc file
 
 ####*usage*
 1. DEFAULT_PROMPT specifies prompt format for non git projects
-2. git_toggle_prompt() enables/disables git prompt customization for current shell
-3. git_toggle_prompt_suggestions() enables/disables prompt indicators for current shell
+2. git_prompt_toggle() enables/disables git prompt customization for current shell
+3. git_prompt_toggle_suggestions() enables/disables prompt indicators for current shell
+4. git_prompt_remote() set the remote target for current shell, default is 'origin'
+5. git_prompt_remote_branch() set the remote branch for current shell, default is 'master'
