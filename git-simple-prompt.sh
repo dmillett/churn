@@ -182,7 +182,7 @@ function git_simple_prompt() {
  
       if [[ $merge_remote == "true" ]]; then
         message=`build_git_suggestion "$untracked" "$MERGE"`
-        color="$PURPLE_B"
+        color="$YELLOW_B
       else
         message=`build_git_suggestion "$untracked" ""`
         color="$GREEN_B"
