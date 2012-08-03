@@ -8,6 +8,7 @@ Customizes the command prompt within a git project directory. It
 allows for color choice, style, and indicators/suggestions. Toggling
 is available to enable/disable local (current shell) prompt customization. 
 Local remote and remote branches may also be updated from their defaults 'origin' and 'master'.
+Thanks to my brother for suggesting prompt modification, it was a nice diversion.
 
 ###*prompt examples:*
 #####up to date 
