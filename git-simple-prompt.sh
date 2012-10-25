@@ -95,7 +95,6 @@ function build_git_suggestion() {
   fi
 }
 
-
 # Color options
 # 0: reset
 # 1: bold
@@ -127,11 +126,12 @@ MODIFIED="*"
 EXTERNAL="+"
 
 # GIT regex
-BRANCH_PATTERN="# On branch ([a-zA-Z0-9]*)"
+BRANCH_PATTERN="# On branch ([a-zA-Z0-9,-_]*)"
 CHANGED_PATTERN="# Changed but not updated:"
 MODIFIED_PATTERN="# Changes not staged for commit:"
 NEW_FILE_PATTERN="# Changes to be committed:"
 UNTRACKED_PATTERN="# Untracked files:"
+NEW_FILE_PATTERN_2="# new file:"
 HAS_REMOTE_PATTERN="[remote \"(.*)\"]"
 ERROR_PATTERN="fatal: "
 
@@ -154,6 +154,8 @@ function git_simple_prompt() {
 
     untracked=""
     if [[ $status =~ $UNTRACKED_PATTERN ]]; then
+      untracked=$EXTERNAL
+    elif [[ $status =~ NEW_FILE_PATTERN_2 ]]; then
       untracked=$EXTERNAL
     fi
 
@@ -201,3 +203,4 @@ export -f git_prompt_toggle
 export -f git_prompt_toggle_suggestions
 export -f git_prompt_remote
 export -f git_prompt_remote_branch
+
