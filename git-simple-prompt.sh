@@ -20,7 +20,8 @@
 # '\v': the shell version
 # '\h': the short host name (up to first '.')
 ##
-DEFAULT_PROMPT="[\w]$ "
+#DEFAULT_PROMPT="[\W]$ "
+DEFAULT_PROMPT="[\W]$ "
 DEFAULT_REMOTE="origin"
 DEFAULT_REMOTE_BRANCH="master"
 
@@ -163,12 +164,15 @@ function git_simple_prompt() {
 
     if [[ $status =~ $CHANGED_PATTERN ]]; then
       message=`build_git_suggestion "$untracked" "$MODIFIED"`
+      project_color="$BLUE"
       color="$BLUE_B" 
     elif [[ $status =~ $MODIFIED_PATTERN ]]; then
       message=`build_git_suggestion "$untracked" "$MODIFIED"`
+      project_color="$BLUE"
       color="$BLUE_B"
     elif [[ $status =~ $NEW_FILE_PATTERN ]]; then
       message=`build_git_suggestion "$untracked" "$MODIFIED"`
+      project_color="$BLUE"
       color="$BLUE_B"
     else
 
@@ -184,14 +188,16 @@ function git_simple_prompt() {
  
       if [[ $merge_remote == "true" ]]; then
         message=`build_git_suggestion "$untracked" "$MERGE"`
+        project_color="$YELLOW"
         color="$YELLOW_B"
       else
         message=`build_git_suggestion "$untracked" ""`
+        project_color="$GREEN"
         color="$GREEN_B"
       fi
     fi
 
-    pscmd="[${color}$project:$branch$message$RESET]$ "
+    pscmd="[${project_color}$project${color}:$branch$message$RESET]$ "
   fi
 
   export PS1="$pscmd"
