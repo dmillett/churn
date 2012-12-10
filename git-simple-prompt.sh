@@ -164,16 +164,16 @@ function git_simple_prompt() {
 
     if [[ $status =~ $CHANGED_PATTERN ]]; then
       message=`build_git_suggestion "$untracked" "$MODIFIED"`
-      project_color="$BLUE"
-      color="$BLUE_B" 
+      color="$BLUE"
+      branch_color="$BLUE_B" 
     elif [[ $status =~ $MODIFIED_PATTERN ]]; then
       message=`build_git_suggestion "$untracked" "$MODIFIED"`
-      project_color="$BLUE"
-      color="$BLUE_B"
+      color="$BLUE"
+      branch_color="$BLUE_B"
     elif [[ $status =~ $NEW_FILE_PATTERN ]]; then
       message=`build_git_suggestion "$untracked" "$MODIFIED"`
-      project_color="$BLUE"
-      color="$BLUE_B"
+      color="$BLUE"
+      branch_color="$BLUE_B"
     else
 
       merge_remote="false"
@@ -188,16 +188,16 @@ function git_simple_prompt() {
  
       if [[ $merge_remote == "true" ]]; then
         message=`build_git_suggestion "$untracked" "$MERGE"`
-        project_color="$YELLOW"
-        color="$YELLOW_B"
+        color="$YELLOW"
+        branch_color="$YELLOW_B"
       else
         message=`build_git_suggestion "$untracked" ""`
-        project_color="$GREEN"
-        color="$GREEN_B"
+        color="$GREEN"
+        branch_color="$GREEN_B"
       fi
     fi
 
-    pscmd="[${project_color}$project${color}:$branch$message$RESET]$ "
+    pscmd="[${color}$project${branch_color}:$branch$message$RESET]$ "
   fi
 
   export PS1="$pscmd"
