@@ -27,11 +27,21 @@ DEFAULT_REMOTE_BRANCH="master"
 
 GIT_PROMPT_ACTIVE="true"
 SHOW_SUGGESTION="true"
+CHECK_REMOTE_DIFF="true"
+
+function git_prompt_remote_diff_toggle() {
+
+  if [[ "$CHECK_REMOTE_DIFF" == "true" ]]; then
+    export CHECK_REMOTE_DIFF="false"
+  else
+    export CHECK_REMOTE_DIFF="true"
+  fi
+}
 
 #
 # Changes the remote target. Default is 'origin'
 # $1: remote target name
-function git_prompt_remote() {
+function git_prompt_set_remote() {
   
   if [[ "$1" != "origin" ]]; then
     export DEFAULT_REMOTE="$1"
@@ -179,8 +189,8 @@ function git_simple_prompt() {
       merge_remote="false"
       has_remote=`git remote -v`
 
-      if [[ $has_remote != "" ]]; then
-        diff_remote=`git diff $DEFAULT_REMOTE/$DEFAULT_REMOTE_BRANCH 2>&1`
+      if [[ $CHECK_REMOTE_DIFF == "true" && $has_remote != "" ]]; then
+       diff_remote=`git diff $DEFAULT_REMOTE/$DEFAULT_REMOTE_BRANCH 2>&1`
         if [[ $diff_remote != "" ]]; then
           merge_remote="true"
         fi
