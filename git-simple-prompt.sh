@@ -217,6 +217,6 @@ function git_simple_prompt() {
 export -f git_simple_prompt
 export -f git_prompt_toggle
 export -f git_prompt_toggle_suggestions
-export -f git_prompt_remote
+export -f git_prompt_remote_diff_toggle
 export -f git_prompt_remote_branch
 
