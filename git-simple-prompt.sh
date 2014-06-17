@@ -137,12 +137,12 @@ MODIFIED="*"
 EXTERNAL="+"
 
 # GIT regex
-BRANCH_PATTERN="# On branch ([a-zA-Z0-9,-]*)"
-CHANGED_PATTERN="# Changed but not updated:"
-MODIFIED_PATTERN="# Changes not staged for commit:"
-NEW_FILE_PATTERN="# Changes to be committed:"
-UNTRACKED_PATTERN="# Untracked files:"
-NEW_FILE_PATTERN_2="# new file:"
+BRANCH_PATTERN="On branch ([a-zA-Z0-9,-]*)"
+CHANGED_PATTERN="Changed but not updated:"
+MODIFIED_PATTERN="Changes not staged for commit:"
+NEW_FILE_PATTERN="Changes to be committed:"
+UNTRACKED_PATTERN="Untracked files:"
+NEW_FILE_PATTERN_2="new file:"
 HAS_REMOTE_PATTERN="[remote \"(.*)\"]"
 ERROR_PATTERN="fatal: "
 
