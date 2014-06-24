@@ -6,6 +6,7 @@ Customization of git prompts, code commit statistics and other beneficial bash h
 ## git-help.sh
 Use to identify commit file/line churn for a specific git project. This is helpful for 
 highlighting potentially fragile and coupled code within legacy projects by identifying:
+
 1. How many times a specific file was updated
 2. How many lines were modified for all of the file mods
 3. Growth trend (code added)
