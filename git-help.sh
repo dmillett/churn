@@ -29,7 +29,7 @@ git_churn() {
   END {
     del="|"
     for (f in Mods)
-      print del, Mods[f], del, LineMods[f], del, f, del, Growth[f], del, Shrink[f], del
+      print del, Mods[f], del, LineMods[f], del, f, del, Growth[f], "(+)", del, Shrink[f] " (-)", del
   }'
 }
 
@@ -41,5 +41,12 @@ git_file_churn_sorted() {
 
 git_line_churn_sorted() {
   git_churn $@ | sort -n --key=4
-  #echo ""
+}
+
+git_line_growth_sorted() {
+  git_churn $@ | sort -n --key=8
+}
+
+git_line_shrink_sorted() {
+  git_churn $@ | sort -n --key=11
 }
