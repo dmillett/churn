@@ -19,12 +19,18 @@ git_churn() {
     Mods[$1]++; 
     LineMods[$1] += $3;
     modLength = length($4) + 1;
-
+    growthi = index($4, "+");
+    growth = modLength - growthi;  
+    
     if ( index($4, "+") )
-      Growth[$1] = modLength - index($4, "-");
+      Growth[$1] += growth
+    else
+      Growth[$1] += 0     
 
-     if ( index($4, "-") )
-       Shrink[$1] = modLength - Growth[$1];
+    if ( index($4, "-") )
+      Shrink[$1] += modLength - growth;
+    else
+      Shrink[$1] += 0
   }
   END {
     del="|"
