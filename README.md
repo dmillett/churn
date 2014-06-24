@@ -85,6 +85,14 @@ Clone and update your .bashrc file
 3. PROMPT_COMMAND=git_simple_prompt
 
 ###*usage:*
+#####*commit-churn:*
+1. git_churn
+2. git_file_churn_sorted
+3. git_line_churn_sorted
+4. git_line_growth_sorted
+5. git_line_shrink_sorted
+
+#####*prompt:*
 1. DEFAULT_PROMPT specifies prompt format for non git projects
 2. git_prompt_toggle() enables/disables git prompt customization for current shell
 3. git_prompt_toggle_suggestions() enables/disables prompt indicators for current shell
