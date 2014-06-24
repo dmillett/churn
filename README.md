@@ -3,7 +3,7 @@ bash-help
 
 Customization of git prompts, code commit statistics and other beneficial bash helper files.
 
-## git-help.sh
+## git-commit-churn.sh
 Use to identify commit file/line churn for a specific git project. This is helpful for 
 highlighting potentially fragile and coupled code within legacy projects by identifying:
 
@@ -39,6 +39,14 @@ $ git_file_churn_sorted --after="2014-01-01"
 | 1 | 12 | git-simple-prompt.sh | 6 | 7 |
 | 1 | 45 | git-help.sh | 46 |  |
 ```
+##### line growth by author
+```
+$ git_line_growth_sorted --author=dbmillett
+| 8 | 99 | README.md | 5 (+) | 17 (-) |
+| 2 | 56 | git-help.sh | 46 (+) | 10 (-) |
+| 14 | 558 | git-simple-prompt.sh | 52 (+) | 26 (-) |
+| 1 | 202 | LICENSE-2.0 | 61 (+) |  (-) |
+```
 
 ## git-simple-prompt.sh
 Customizes the command prompt within a git project directory. It
@@ -65,9 +73,9 @@ Thanks to my brother for suggesting prompt modification, it was a nice diversion
 [~/bash/bash-help:master(↓↑)]$
 ```
 ###*installation:*
-Update your .bashrc file
+Clone and update your .bashrc file
 
-1. source "$path-to-script/git-help.sh"
+1. source "$path-to-script/git-commit-churn.sh"
 2. source "$path-to-script/git-simple-prompt.sh"
 3. PROMPT_COMMAND=git_simple_prompt
 
