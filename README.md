@@ -20,24 +20,24 @@ stats for file moves and renames
 ##### unsorted file, line, growth trend, shrink trend 
 ```
 $ git churn
-| 14 | 558 | git-simple-prompt.sh | 52 | 26 |
-| 1 | 45 | git-help.sh | 46 |  |
-| 6 | 53 | README.md | 5 | 17 |
-| 1 | 202 | LICENSE-2.0 | 61 |  |
+| 14 | 558 | git-simple-prompt.sh | 52 (+) | 26 (-) |
+| 1 | 45 | git-help.sh | 46 (+) | (-) |
+| 6 | 53 | README.md | 5 (+) | 17 (-) |
+| 1 | 202 | LICENSE-2.0 | 61 (+) | (-) |
 ```
 ##### sort by file modification count 
 ```
 $ git_file_churn_sorted
-| 1 | 202 | LICENSE-2.0 | 61 |  |
-| 1 | 45 | git-help.sh | 46 |  |
-| 6 | 53 | README.md | 5 | 17 |
-| 14 | 558 | git-simple-prompt.sh | 52 | 26 |
+| 1 | 202 | LICENSE-2.0 | 61 (+) | (-) |
+| 1 | 45 | git-help.sh | 46 (+) | (-) |
+| 6 | 53 | README.md | 5 (+) | 17 (-) |
+| 14 | 558 | git-simple-prompt.sh | 52 (+) | 26 (-) |
 ```
 ##### pass other 'git log' arguments through
 ```
 $ git_file_churn_sorted --after="2014-01-01"
-| 1 | 12 | git-simple-prompt.sh | 6 | 7 |
-| 1 | 45 | git-help.sh | 46 |  |
+| 1 | 12 | git-simple-prompt.sh | 6 (+) | 7 (-) |
+| 1 | 45 | git-help.sh | 46 (+) | (-) |
 ```
 ##### line growth by author
 ```
