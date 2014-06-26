@@ -1,5 +1,28 @@
 #!/bin/bash
 
+PRINT_HEADER="false"
+
+#
+# Toggle printing the header (off by default)
+function git_churn_toggle_header() {
+
+  if [[ "$PRINT_HEADER" == "true" ]]; then
+    export PRINT_HEADER="false"
+  else
+    export PRINT_HEADER="true"
+  fi
+}
+
+#
+# Print the header (if toggled 'true')
+function print_header() {
+
+  if [[ "$PRINT_HEADER" == "true" ]]; then
+    awk 'BEGIN { printf "|%7s|%7s|%11s|%11s| filename |\n", "file", "line", "growth", "shrink" }'
+    awk 'BEGIN{for(c=0;c<52;c++) printf "="; printf "\n"}'
+  fi
+}
+
 ##
 # Sum file and line modifications for all files from within a git project. 
 # Basic results are provided via: 
@@ -12,7 +35,7 @@
 # 'git_file_churn --after="2014-06-21"'
 # 'git_file_churn --after="2014-06-21 --author=dmillett'      
 #
-git_churn() {
+function git_churn() {
 
   gitArguments=($@)
   git log --stat "${gitArguments[@]}" | grep -v -E "^[commit\|Author\|Date]" | grep \| | awk '{
@@ -33,26 +56,35 @@ git_churn() {
       Shrink[$1] += 0
   }
   END {
-    del="|"
+    d="|"
     for (f in Mods)
-      print del, Mods[f], del, LineMods[f], del, f, del, Growth[f], "(+)", del, Shrink[f] " (-)", del
+      printf("%s %5s %s %5s %s %5s (+) %s %5s (-) %s %s %s\n", d,Mods[f],d,LineMods[f],d,Growth[f],d,Shrink[f],d,f,d)
   }'
 }
 
 #
 # Sort file modification count ascending
-git_file_churn_sorted() {
+function git_file_churn_sorted() {
+  print_header
   git_churn $@ | sort -n --key=2
 }
 
-git_line_churn_sorted() {
+function git_line_churn_sorted() {
+  print_header
   git_churn $@ | sort -n --key=4
 }
 
-git_line_growth_sorted() {
-  git_churn $@ | sort -n --key=8
+function git_line_growth_sorted() {
+  print_header
+  git_churn $@ | sort -n --key=6
 }
 
-git_line_shrink_sorted() {
-  git_churn $@ | sort -n --key=11
+function git_line_shrink_sorted() {
+  print_header
+  git_churn $@ | sort -n --key=9
+}
+
+function git_file_sort() {
+  print_header
+  git_churn $@ | sort --key=10
 }
