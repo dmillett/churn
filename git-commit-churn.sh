@@ -69,21 +69,29 @@ function git_file_churn_sorted() {
   git_churn $@ | sort -n --key=2
 }
 
+#
+# Sort by line modification count per file ascending
 function git_line_churn_sorted() {
   print_header
   git_churn $@ | sort -n --key=4
 }
 
+#
+# Sort by line growth trend/count per file ascending
 function git_line_growth_sorted() {
   print_header
   git_churn $@ | sort -n --key=6
 }
 
+#
+# Sort by line shrink trend/count per file ascending
 function git_line_shrink_sorted() {
   print_header
   git_churn $@ | sort -n --key=9
 }
 
+#
+# Sort by file name (regardless of count)
 function git_file_sort() {
   print_header
   git_churn $@ | sort --key=10

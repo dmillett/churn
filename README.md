@@ -19,38 +19,42 @@ stats for file moves and renames
 ###*churn examples:*
 ##### unsorted file, line, growth trend, shrink trend 
 ```
-$ git_churn 
-| 14 | 558 | git-simple-prompt.sh | 283 (+) | 13 (-) |
-| 2 | 68 | git-commit-churn.sh | 68 (+) | 1 (-) |
-| 3 | 108 | git-help.sh | 56 (+) | 1 (-) |
-| 10 | 133 | README.md | 133 (+) | 6 (-) |
-| 1 | 202 | LICENSE-2.0 | 60 (+) | 0 (-) |
+[~/bash/bash-help:master(+,*)]$ git_churn
+|    14 |   558 |   283 (+) |    13 (-) | git-simple-prompt.sh |
+|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
+|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
+|    12 |   178 |   178 (+) |     7 (-) | README.md |
+|     1 |   202 |    60 (+) |     0 (-) | LICENSE-2.0 |
 ```
 ##### sort by file modification count 
 ```
-$ git_file_churn_sorted 
-| 1 | 202 | LICENSE-2.0 | 60 (+) | 0 (-) |
-| 2 | 68 | git-commit-churn.sh | 68 (+) | 1 (-) |
-| 3 | 108 | git-help.sh | 56 (+) | 1 (-) |
-| 10 | 133 | README.md | 133 (+) | 6 (-) |
-| 14 | 558 | git-simple-prompt.sh | 283 (+) | 13 (-) |
+[~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
+[~/bash/bash-help:master(+,*)]$ git_file_churn_sorted 
+
+|   file|   line|     growth|     shrink| filename |
+====================================================
+|     1 |   202 |    60 (+) |     0 (-) | LICENSE-2.0 |
+|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
+|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
+|    12 |   178 |   178 (+) |     7 (-) | README.md |
+|    14 |   558 |   283 (+) |    13 (-) | git-simple-prompt.sh |
 ```
 ##### pass other 'git log' arguments through
 ```
-$ git_file_churn_sorted --after="2014-01-01"
-| 1 | 12 | git-simple-prompt.sh | 12 (+) | 1 (-) |
-| 2 | 68 | git-commit-churn.sh | 68 (+) | 1 (-) |
-| 3 | 108 | git-help.sh | 56 (+) | 1 (-) |
-| 4 | 80 | README.md | 80 (+) | 3 (-) |
+[~/bash/bash-help:master(+,*)]$ git_file_churn_sorted --after="2014-01-01"
+|     1 |    12 |    12 (+) |     1 (-) | git-simple-prompt.sh |
+|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
+|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
+|     6 |   125 |   125 (+) |     4 (-) | README.md |
 ```
 ##### line growth by author
 ```
-$ git_line_growth_sorted --author=dbmillett
-| 3 | 108 | git-help.sh | 56 (+) | 1 (-) |
-| 1 | 202 | LICENSE-2.0 | 60 (+) | 0 (-) |
-| 2 | 68 | git-commit-churn.sh | 68 (+) | 1 (-) |
-| 10 | 133 | README.md | 133 (+) | 6 (-) |
-| 14 | 558 | git-simple-prompt.sh | 283 (+) | 13 (-) |
+[~/bash/bash-help:master(+,*)]$ git_line_growth_sorted --author=dbmillett
+|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
+|     1 |   202 |    60 (+) |     0 (-) | LICENSE-2.0 |
+|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
+|    12 |   178 |   178 (+) |     7 (-) | README.md |
+|    14 |   558 |   283 (+) |    13 (-) | git-simple-prompt.sh |
 ```
 
 ## git-simple-prompt.sh
@@ -91,6 +95,8 @@ Clone and update your .bashrc file
 3. git_line_churn_sorted
 4. git_line_growth_sorted
 5. git_line_shrink_sorted
+6. git_file_sorted
+7. *git_churn_toggle_header*
 
 #####*prompt:*
 1. DEFAULT_PROMPT specifies prompt format for non git projects
