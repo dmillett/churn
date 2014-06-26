@@ -1,15 +1,25 @@
 #!/bin/bash
 
 PRINT_HEADER="false"
+PRINT_TAIL="true"
 
 #
 # Toggle printing the header (off by default)
-function git_churn_toggle_header() {
+function git_churn_toggle_print_header() {
 
   if [[ "$PRINT_HEADER" == "true" ]]; then
     export PRINT_HEADER="false"
   else
     export PRINT_HEADER="true"
+  fi
+}
+
+function git_churn_toggle_print_tail() {
+
+  if [[ "$PRINT_TAIL" == "true" ]]; then
+    export PRINT_TAIL="false"
+  else
+    export PRINT_TAIL="true"
   fi
 }
 
@@ -20,6 +30,16 @@ function print_header() {
   if [[ "$PRINT_HEADER" == "true" ]]; then
     awk 'BEGIN { printf "|%7s|%7s|%11s|%11s| filename |\n", "file", "line", "growth", "shrink" }'
     awk 'BEGIN{for(c=0;c<52;c++) printf "="; printf "\n"}'
+  fi
+}
+
+#
+# Print the header (if toggled 'true')
+function print_tail() {
+
+  if [[ "$PRINT_TAIL" == "true" ]]; then
+    awk 'BEGIN{for(c=0;c<52;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "|%7s|%7s|%11s|%11s| filename |\n", "file", "line", "growth", "shrink" }'
   fi
 }
 
@@ -67,6 +87,7 @@ function git_churn() {
 function git_file_churn_sorted() {
   print_header
   git_churn $@ | sort -n --key=2
+  print_tail
 }
 
 #
@@ -74,6 +95,7 @@ function git_file_churn_sorted() {
 function git_line_churn_sorted() {
   print_header
   git_churn $@ | sort -n --key=4
+  print_tail
 }
 
 #
@@ -81,6 +103,7 @@ function git_line_churn_sorted() {
 function git_line_growth_sorted() {
   print_header
   git_churn $@ | sort -n --key=6
+  print_tail
 }
 
 #
@@ -88,6 +111,7 @@ function git_line_growth_sorted() {
 function git_line_shrink_sorted() {
   print_header
   git_churn $@ | sort -n --key=9
+  print_tail
 }
 
 #

@@ -96,7 +96,8 @@ Clone and update your .bashrc file
 4. git_line_growth_sorted
 5. git_line_shrink_sorted
 6. git_file_sorted
-7. *git_churn_toggle_header*
+7. *git_churn_toggle_print_header (default 'false')*
+8. *git_churn_toggle_print_tail (default 'true')*
 
 #####*prompt:*
 1. DEFAULT_PROMPT specifies prompt format for non git projects
