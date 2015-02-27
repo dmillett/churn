@@ -50,15 +50,12 @@ stats for file moves and renames
 |     8 |   180 |   123 |    57 | README.md |
 |    19 |   456 |   322 |   134 | Stat Totals |
 ```
-##### line growth by author
+##### line growth by author and file type (file pattern last)
 ```
-[~/bash/bash-help:master(+,*)]$ git_line_growth --author=dbmillett
-|     3 |   108 |    54 |    54 | git-help.sh |
-|     5 |   152 |   137 |    15 | git-commit-churn.sh |
-|    14 |   233 |   170 |    63 | README.md |
-|     1 |   202 |   202 |     0 | LICENSE-2.0 |
+[~/bash/bash-help:master(+,*)]$ git_line_growth --author=dbmillett  -- *.sh
+|     7 |   221 |   170 |    51 | git-commit-churn.sh |
 |    16 |   562 |   392 |   170 | git-simple-prompt.sh |
-|    39 |  1257 |   955 |   302 | Stat Totals |
+|    23 |   783 |   562 |   221 | Stat Totals |
 ```
 
 ## git-simple-prompt.sh
