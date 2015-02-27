@@ -47,70 +47,67 @@ function print_tail() {
 # Sum file and line modifications for all files from within a git project. 
 # Basic results are provided via: 
 #
-# 'git log --stat'
+# 'git log --numstat'
+#
+# ('git log --stat' shows growth/sthrink trends)
 #
 # Additional arguments may be passed in via the command line similar
 # to calling 'git log' directly. For example
 # 
 # 'git_file_churn --after="2014-06-21"'
-# 'git_file_churn --after="2014-06-21 --author=dmillett'      
+# 'git_file_churn --after="2014-06-21 --author=dmillett'
 #
 function git_churn() {
 
-  gitArguments=($@)
-  git log --stat "${gitArguments[@]}" | grep -v -E "^[commit\|Author\|Date]" | grep \| | awk '{
-    Mods[$1]++; 
-    LineMods[$1] += $3;
-    modLength = length($4) + 1;
-    growthi = index($4, "+");
-    growth = modLength - growthi;  
-    
-    if ( index($4, "+") )
-      Growth[$1] += growth
-    else
-      Growth[$1] += 0     
-
-    if ( index($4, "-") )
-      Shrink[$1] += modLength - growth;
-    else
-      Shrink[$1] += 0
+  gitargs=($@)
+  git log --numstat "${gitargs[@]}" | grep -v -E "^[commit\|Author\|Date]" | grep "^[0-9]" | awk '{
+    fmods[$3]++;
+    adds[$3] += $1;
+    subtracts[$3] += $2;
+    lmods[$3] += ($1 + $2);
+    ftotal++;
+    ltotal += ($1 + $2);
+    growth += $1;
+    shrink += $2;
   }
   END {
     d="|"
-    for (f in Mods)
-      printf("%s %5s %s %5s %s %5s (+) %s %5s (-) %s %s %s\n", d,Mods[f],d,LineMods[f],d,Growth[f],d,Shrink[f],d,f,d)
+    for (f in fmods)
+      printf("%s %5s %s %5s %s %5s %s %5s %s %s %s\n", d, fmods[f], d, lmods[f], d, adds[f], d, subtracts[f], d, f, d)
+
+    printf("%s %5s %s %5s %s %5s %s %5s %s Stat Totals %s\n", d, ftotal, d, ltotal, d, growth, d, shrink, d, d)
   }'
 }
 
 #
 # Sort file modification count ascending
-function git_file_churn_sorted() {
+function git_file_churn() {
   print_header
-  git_churn $@ | sort -n --key=2
+  churn $@ | sort -n --key=2
   print_tail
 }
 
 #
 # Sort by line modification count per file ascending
-function git_line_churn_sorted() {
+function git_line_churn() {
   print_header
-  git_churn $@ | sort -n --key=4
+  churn $@ | sort -n --key=4
   print_tail
 }
 
 #
 # Sort by line growth trend/count per file ascending
-function git_line_growth_sorted() {
+function git_line_growth() {
   print_header
-  git_churn $@ | sort -n --key=6
+  churn $@ | sort -n --key=6
   print_tail
 }
 
 #
 # Sort by line shrink trend/count per file ascending
-function git_line_shrink_sorted() {
+function git_line_shrink() {
   print_header
-  git_churn $@ | sort -n --key=9
+  churn $@ | sort -n --key=8
   print_tail
 }
 
@@ -118,5 +115,5 @@ function git_line_shrink_sorted() {
 # Sort by file name (regardless of count)
 function git_file_sort() {
   print_header
-  git_churn $@ | sort --key=10
+  churn $@ | sort --key=10
 }

@@ -9,52 +9,56 @@ highlighting potentially fragile and coupled code within legacy projects by iden
 
 1. How many times a specific file was updated
 2. How many lines were modified for all of the file mods
-3. Growth trend (code added)
-4. Shrink trend (code removed)
+3. Line additions
+4. Line removals
 
 The function will pass along other *git log* arguments and apply them. Thus it is possible
 to search for commit stats with date ranges, authoring, etc. *Note* that it does combine 
 stats for file moves and renames
 
 ###*churn examples:*
-##### unsorted file, line, growth trend, shrink trend 
+##### unsorted file, line, growth, shrink
 ```
 [~/bash/bash-help:master(+,*)]$ git_churn
-|    14 |   558 |   283 (+) |    13 (-) | git-simple-prompt.sh |
-|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
-|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
-|    12 |   178 |   178 (+) |     7 (-) | README.md |
-|     1 |   202 |    60 (+) |     0 (-) | LICENSE-2.0 |
+|    16 |   562 |   392 |   170 | git-simple-prompt.sh |
+|     5 |   152 |   137 |    15 | git-commit-churn.sh |
+|     3 |   108 |    54 |    54 | git-help.sh |
+|    14 |   233 |   170 |    63 | README.md |
+|     1 |   202 |   202 |     0 | LICENSE-2.0 |
+|    39 |  1257 |   955 |   302 | Stat Totals |
 ```
 ##### sort by file modification count 
 ```
 [~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
-[~/bash/bash-help:master(+,*)]$ git_file_churn_sorted 
+[~/bash/bash-help:master(+,*)]$ git_file_churn
 
 |   file|   line|     growth|     shrink| filename |
 ====================================================
-|     1 |   202 |    60 (+) |     0 (-) | LICENSE-2.0 |
-|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
-|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
-|    12 |   178 |   178 (+) |     7 (-) | README.md |
-|    14 |   558 |   283 (+) |    13 (-) | git-simple-prompt.sh |
+|     1 |   202 |   202 |     0 | LICENSE-2.0 |
+|     3 |   108 |    54 |    54 | git-help.sh |
+|     5 |   152 |   137 |    15 | git-commit-churn.sh |
+|    14 |   233 |   170 |    63 | README.md |
+|    16 |   562 |   392 |   170 | git-simple-prompt.sh |
+|    39 |  1257 |   955 |   302 | Stat Totals |
 ```
 ##### pass other 'git log' arguments through
 ```
-[~/bash/bash-help:master(+,*)]$ git_file_churn_sorted --after="2014-01-01"
-|     1 |    12 |    12 (+) |     1 (-) | git-simple-prompt.sh |
-|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
-|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
-|     6 |   125 |   125 (+) |     4 (-) | README.md |
+[~/bash/bash-help:master(+,*)]$ git_file_churn --after="2014-01-01"
+|     3 |   108 |    54 |    54 | git-help.sh |
+|     3 |    16 |     8 |     8 | git-simple-prompt.sh |
+|     5 |   152 |   137 |    15 | git-commit-churn.sh |
+|     8 |   180 |   123 |    57 | README.md |
+|    19 |   456 |   322 |   134 | Stat Totals |
 ```
 ##### line growth by author
 ```
-[~/bash/bash-help:master(+,*)]$ git_line_growth_sorted --author=dbmillett
-|     3 |   108 |    56 (+) |     1 (-) | git-help.sh |
-|     1 |   202 |    60 (+) |     0 (-) | LICENSE-2.0 |
-|     3 |   118 |   118 (+) |     2 (-) | git-commit-churn.sh |
-|    12 |   178 |   178 (+) |     7 (-) | README.md |
-|    14 |   558 |   283 (+) |    13 (-) | git-simple-prompt.sh |
+[~/bash/bash-help:master(+,*)]$ git_line_growth --author=dbmillett
+|     3 |   108 |    54 |    54 | git-help.sh |
+|     5 |   152 |   137 |    15 | git-commit-churn.sh |
+|    14 |   233 |   170 |    63 | README.md |
+|     1 |   202 |   202 |     0 | LICENSE-2.0 |
+|    16 |   562 |   392 |   170 | git-simple-prompt.sh |
+|    39 |  1257 |   955 |   302 | Stat Totals |
 ```
 
 ## git-simple-prompt.sh
