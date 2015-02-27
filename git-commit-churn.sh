@@ -60,7 +60,7 @@ function print_tail() {
 function git_churn() {
 
   gitargs=($@)
-  git log --numstat "${gitargs[@]}" | grep -v -E "^[commit\|Author\|Date]" | grep "^[0-9]" | awk '{
+  git log --numstat "${gitargs[@]}" | grep"^[0-9]" | awk '{
     fmods[$3]++;
     adds[$3] += $1;
     subtracts[$3] += $2;
@@ -83,7 +83,7 @@ function git_churn() {
 # Sort file modification count ascending
 function git_file_churn() {
   print_header
-  churn $@ | sort -n --key=2
+  git_churn $@ | sort -n --key=2
   print_tail
 }
 
@@ -91,7 +91,7 @@ function git_file_churn() {
 # Sort by line modification count per file ascending
 function git_line_churn() {
   print_header
-  churn $@ | sort -n --key=4
+  git_churn $@ | sort -n --key=4
   print_tail
 }
 
@@ -99,7 +99,7 @@ function git_line_churn() {
 # Sort by line growth trend/count per file ascending
 function git_line_growth() {
   print_header
-  churn $@ | sort -n --key=6
+  git_churn $@ | sort -n --key=6
   print_tail
 }
 
@@ -107,7 +107,7 @@ function git_line_growth() {
 # Sort by line shrink trend/count per file ascending
 function git_line_shrink() {
   print_header
-  churn $@ | sort -n --key=8
+  git_churn $@ | sort -n --key=8
   print_tail
 }
 
@@ -115,5 +115,5 @@ function git_line_shrink() {
 # Sort by file name (regardless of count)
 function git_file_sort() {
   print_header
-  churn $@ | sort --key=10
+  git_churn $@ | sort --key=10
 }
