@@ -52,7 +52,7 @@ stats for file moves and renames
 ```
 ##### line growth by author and file type (file pattern last)
 ```
-[~/bash/bash-help:master(+,*)]$ git_line_growth --author=dbmillett  -- *.sh
+[~/bash/bash-help:master(+,*)]$ git_line_growth --author=dbmillett  -- "*.h"
 |     7 |   221 |   170 |    51 | git-commit-churn.sh |
 |    16 |   562 |   392 |   170 | git-simple-prompt.sh |
 |    23 |   783 |   562 |   221 | Stat Totals |
