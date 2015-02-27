@@ -60,7 +60,7 @@ function print_tail() {
 function git_churn() {
 
   gitargs=($@)
-  git log --numstat "${gitargs[@]}" | grep"^[0-9]" | awk '{
+  git log --numstat "${gitargs[@]}" | grep "^[0-9]" | awk '{
     fmods[$3]++;
     adds[$3] += $1;
     subtracts[$3] += $2;
