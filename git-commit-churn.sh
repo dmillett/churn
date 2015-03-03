@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PRINT_HEADER="false"
 PRINT_TAIL="true"

@@ -32,14 +32,14 @@ stats for file moves and renames
 [~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
 [~/bash/bash-help:master(+,*)]$ git_file_churn
 
-|   file|   line|     growth|     shrink| filename |
-====================================================
-|     1 |   202 |   202 |     0 | LICENSE-2.0 |
-|     3 |   108 |    54 |    54 | git-help.sh |
-|     5 |   152 |   137 |    15 | git-commit-churn.sh |
-|    14 |   233 |   170 |    63 | README.md |
-|    16 |   562 |   392 |   170 | git-simple-prompt.sh |
-|    39 |  1257 |   955 |   302 | Stat Totals |
+|   file |   line | growth | shrink | filename/stats |
+======================================================
+|     1  |    202 |    202 |      0 | LICENSE-2.0 |
+|     3  |    108 |     54 |     54 | git-help.sh |
+|     5  |    152 |    137 |     15 | git-commit-churn.sh |
+|    14  |    233 |    170 |     63 | README.md |
+|    16  |    562 |    392 |    170 | git-simple-prompt.sh |
+|    39  |   1257 |    955 |    302 | Stat Totals |
 ```
 ##### pass other 'git log' arguments through
 ```
@@ -97,8 +97,8 @@ Clone and update your .bashrc file
 4. git_line_growth_sorted
 5. git_line_shrink_sorted
 6. git_file_sorted
-7. *git_churn_toggle_print_header (default 'false')*
-8. *git_churn_toggle_print_tail (default 'true')*
+7. *git_churn_toggle_header (default 'false')*
+8. *git_churn_toggle_tail (default 'true')*
 
 #####*prompt:*
 1. DEFAULT_PROMPT specifies prompt format for non git projects
