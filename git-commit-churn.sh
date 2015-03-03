@@ -5,7 +5,7 @@ PRINT_TAIL="true"
 
 #
 # Toggle printing the header (off by default)
-function git_churn_toggle_print_header() {
+function git_churn_toggle_header() {
 
   if [[ "$PRINT_HEADER" == "true" ]]; then
     export PRINT_HEADER="false"
@@ -14,7 +14,7 @@ function git_churn_toggle_print_header() {
   fi
 }
 
-function git_churn_toggle_print_tail() {
+function git_churn_toggle_tail() {
 
   if [[ "$PRINT_TAIL" == "true" ]]; then
     export PRINT_TAIL="false"
@@ -28,8 +28,8 @@ function git_churn_toggle_print_tail() {
 function print_header() {
 
   if [[ "$PRINT_HEADER" == "true" ]]; then
-    awk 'BEGIN { printf "|%7s|%7s|%11s|%11s| filename |\n", "file", "line", "growth", "shrink" }'
-    awk 'BEGIN{for(c=0;c<52;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | filename/stats |\n", "file", "line", "growth", "shrink" }'
+    awk 'BEGIN{for(c=0;c<58;c++) printf "="; printf "\n"}'
   fi
 }
 
@@ -38,8 +38,8 @@ function print_header() {
 function print_tail() {
 
   if [[ "$PRINT_TAIL" == "true" ]]; then
-    awk 'BEGIN{for(c=0;c<52;c++) printf "="; printf "\n"}'
-    awk 'BEGIN { printf "|%7s|%7s|%11s|%11s| filename |\n", "file", "line", "growth", "shrink" }'
+    awk 'BEGIN{for(c=0;c<58;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "| %7s | %7s | %7s | %7s | filename/stats |\n", "file", "line", "growth", "shrink" }'
   fi
 }
 
@@ -73,9 +73,9 @@ function git_churn() {
   END {
     d="|"
     for (f in fmods)
-      printf("%s %5s %s %5s %s %5s %s %5s %s %s %s\n", d, fmods[f], d, lmods[f], d, adds[f], d, subtracts[f], d, f, d)
+      printf("%s %7s %s %7s %s %7s %s %7s %s %s %s\n", d, fmods[f], d, lmods[f], d, adds[f], d, subtracts[f], d, f, d)
 
-    printf("%s %5s %s %5s %s %5s %s %5s %s Stat Totals %s\n", d, ftotal, d, ltotal, d, growth, d, shrink, d, d)
+    printf("%s %7s %s %7s %s %7s %s %7s %s Stat Totals %s\n", d, ftotal, d, ltotal, d, growth, d, shrink, d, d)
   }'
 }
 
