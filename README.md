@@ -20,42 +20,46 @@ stats for file moves and renames
 ##### unsorted file, line, growth, shrink
 ```
 [~/bash/bash-help:master(+,*)]$ git_churn
-|    16 |   562 |   392 |   170 | git-simple-prompt.sh |
-|     5 |   152 |   137 |    15 | git-commit-churn.sh |
-|     3 |   108 |    54 |    54 | git-help.sh |
-|    14 |   233 |   170 |    63 | README.md |
-|     1 |   202 |   202 |     0 | LICENSE-2.0 |
-|    39 |  1257 |   955 |   302 | Stat Totals |
+|      18 |     320 |     214 |     106 |      108 | README.md |
+|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
+|       3 |     108 |      54 |      54 |        0 | git-help.sh |
+|       1 |     202 |     202 |       0 |      202 | LICENSE-2.0 |
+|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
+|      51 |    1485 |    1078 |     407 |      671 | Stat Totals |
 ```
 ##### sort by file modification count 
 ```
 [~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
 [~/bash/bash-help:master(+,*)]$ git_file_churn
-
-|   file |   line | growth | shrink | filename/stats |
-======================================================
-|     1  |    202 |    202 |      0 | LICENSE-2.0 |
-|     3  |    108 |     54 |     54 | git-help.sh |
-|     5  |    152 |    137 |     15 | git-commit-churn.sh |
-|    14  |    233 |    170 |     63 | README.md |
-|    16  |    562 |    392 |    170 | git-simple-prompt.sh |
-|    39  |   1257 |    955 |    302 | Stat Totals |
+|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
+=====================================================================
+|       1 |     202 |     202 |       0 |      202 | LICENSE-2.0 |
+|       3 |     108 |      54 |      54 |        0 | git-help.sh |
+|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
+|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
+|      18 |     320 |     214 |     106 |      108 | README.md |
+|      51 |    1485 |    1078 |     407 |      671 | Stat Totals |
 ```
 ##### pass other 'git log' arguments through
 ```
-[~/bash/bash-help:master(+,*)]$ git_file_churn --after="2014-01-01"
-|     3 |   108 |    54 |    54 | git-help.sh |
-|     3 |    16 |     8 |     8 | git-simple-prompt.sh |
-|     5 |   152 |   137 |    15 | git-commit-churn.sh |
-|     8 |   180 |   123 |    57 | README.md |
-|    19 |   456 |   322 |   134 | Stat Totals |
+[~/bash/bash-help:master()]$ git_line_churn --after=2014-01-01
+|       4 |      18 |       9 |       9 |        0 | git-simple-prompt.sh |
+|       3 |     108 |      54 |      54 |        0 | git-help.sh |
+|      12 |     267 |     167 |     100 |       67 | README.md |
+|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
+|      31 |     684 |     445 |     239 |      206 | Stat Totals |
+=====================================================================
+|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
 ```
-##### line growth by author and file type (file pattern last)
+##### net line growth by author and file type (file pattern last)
 ```
-[~/bash/bash-help:master(+,*)]$ git_line_growth --author=dbmillett  -- "*.h"
-|     7 |   221 |   170 |    51 | git-commit-churn.sh |
-|    16 |   562 |   392 |   170 | git-simple-prompt.sh |
-|    23 |   783 |   562 |   221 | Stat Totals |
+[~/bash/bash-help:master()]$ git_net_growth --author=dbmillett -- "*.sh"
+|       3 |     108 |      54 |      54 |        0 | git-help.sh |
+|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
+|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
+|      32 |     963 |     662 |     301 |      361 | Stat Totals |
+=====================================================================
+|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
 ```
 
 ## git-simple-prompt.sh
