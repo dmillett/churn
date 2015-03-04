@@ -28,8 +28,8 @@ function git_churn_toggle_tail() {
 function print_header() {
 
   if [[ "$PRINT_HEADER" == "true" ]]; then
-    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | filename/stats |\n", "file", "line", "growth", "shrink" }'
-    awk 'BEGIN{for(c=0;c<58;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "file", "line", "growth", "shrink", "net(+/-)" }'
+    awk 'BEGIN{ for(c=0;c<69;c++) printf "="; printf "\n"}'
   fi
 }
 
@@ -38,8 +38,8 @@ function print_header() {
 function print_tail() {
 
   if [[ "$PRINT_TAIL" == "true" ]]; then
-    awk 'BEGIN{for(c=0;c<58;c++) printf "="; printf "\n"}'
-    awk 'BEGIN { printf "| %7s | %7s | %7s | %7s | filename/stats |\n", "file", "line", "growth", "shrink" }'
+    awk 'BEGIN{ for(c=0;c<69;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "file", "line", "growth", "shrink", "net(+/-)" }'
   fi
 }
 
@@ -72,10 +72,14 @@ function git_churn() {
   }
   END {
     d="|"
-    for (f in fmods)
-      printf("%s %7s %s %7s %s %7s %s %7s %s %s %s\n", d, fmods[f], d, lmods[f], d, adds[f], d, subtracts[f], d, f, d)
+        for (f in fmods)
+    {
+      net =  adds[f] - subtracts[f]
+      printf("%s %7s %s %7s %s %7s %s %7s %s %8s %s %-s %s\n", d, fmods[f], d, lmods[f], d, adds[f], d, subtracts[f], d, net, d, f, d)
+    }
 
-    printf("%s %7s %s %7s %s %7s %s %7s %s Stat Totals %s\n", d, ftotal, d, ltotal, d, growth, d, shrink, d, d)
+    totals = growth - shrink
+    printf("%s %7s %s %7s %s %7s %s %7s %s %8s %s Stat Totals %s\n", d, ftotal, d, ltotal, d, growth, d, shrink, d, totals, d, d)
   }'
 }
 
@@ -112,8 +116,24 @@ function git_line_shrink() {
 }
 
 #
+# Sort by net growth
+function git_net_growth() {
+  print_header
+  git_churn "$@" | sort -n --key=10
+  print_tail
+}
+
+#
+# Sort by net shrink
+function git_net_shrink() {
+  print_header
+  git_churn "$@" | sort -n -r --key=10
+  print_tail
+}
+
+#
 # Sort by file name (regardless of count)
 function git_file_sort() {
   print_header
-  git_churn "$@" | sort --key=10
+  git_churn "$@" | sort --key=12
 }
