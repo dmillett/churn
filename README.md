@@ -12,6 +12,7 @@ highlighting potentially fragile and coupled code (todo: refactor :-) by identif
 3. Line additions
 4. Line removals
 5. Net growth/shrink of the codebase
+
 The function will pass along other *git log* arguments and apply them. Thus it is possible
 to search for commit stats with date ranges, authoring, etc. *Note* that it does combine 
 stats for file moves and renames
@@ -25,7 +26,8 @@ stats for file moves and renames
 5. git_net_growth()
 6. git_net_shrink()
 7. git_file_sort()
-##### sort by file modification count 
+
+##### sort by file modification count
 ```
 [~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
 [~/bash/bash-help:master(+,*)]$ git_file_churn
@@ -62,6 +64,7 @@ stats for file moves and renames
 
 ##### commits by date for: file, line, growth, shrink, net
 Find out when the most/least modifications happened
+
 1. git_date_churn()
 2. git_date_files
 3. git_date_lines()
