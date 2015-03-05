@@ -62,6 +62,32 @@ stats for file moves and renames
 |    file |    line | growth  | shrink  | net(+/-) | filename/stats |
 ```
 
+##### commits by date for: file, line, growth, shrink, net
+```
+[~/bash/bash-help:master()]$ git_date_growth
+| 2012-12-18 |       1 |       2 |       1 |       1 |        0 |
+| 2014-11-14 |       2 |       4 |       2 |       2 |        0 |
+| 2012-08-03 |       3 |       5 |       3 |       2 |        1 |
+| 2012-10-25 |       2 |       9 |       6 |       3 |        3 |
+| 2014-06-16 |       1 |      12 |       6 |       6 |        0 |
+| 2012-12-17 |       1 |      16 |      13 |       3 |       10 |
+| 2015-02-27 |       5 |      39 |      18 |      21 |       -3 |
+| 2012-12-09 |       2 |      32 |      19 |      13 |        6 |
+| 2015-03-02 |       4 |      40 |      20 |      20 |        0 |
+| 2014-06-26 |       2 |      29 |      27 |       2 |       25 |
+| 2015-02-26 |       2 |     111 |      56 |      55 |        1 |
+| 2015-03-04 |       2 |      98 |      61 |      37 |       24 |
+| 2012-08-02 |       5 |      85 |      67 |      18 |       49 |
+| 2014-06-25 |       3 |     110 |      78 |      32 |       46 |
+| 2014-06-23 |       3 |      91 |      87 |       4 |       83 |
+| 2012-07-15 |       1 |     192 |      93 |      99 |       -6 |
+| 2014-06-24 |       8 |     210 |     122 |      88 |       34 |
+| 2012-06-20 |       1 |     162 |     162 |       0 |      162 |
+| 2012-08-01 |       4 |     298 |     269 |      29 |      240 |
+=================================================================
+|      dates |   files |   lines | growth  | shrink  | net(+/-) |
+```
+
 ## git-simple-prompt.sh
 Customizes the command prompt within a git project directory. It
 allows for color choice, style, and indicators/suggestions. Toggling

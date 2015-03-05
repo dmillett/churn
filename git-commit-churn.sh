@@ -28,7 +28,7 @@ function git_churn_toggle_tail() {
 function print_header() {
 
   if [[ "$PRINT_HEADER" == "true" ]]; then
-    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "file", "line", "growth", "shrink", "net(+/-)" }'
+    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "files", "lines", "growth", "shrink", "net(+/-)" }'
     awk 'BEGIN{ for(c=0;c<69;c++) printf "="; printf "\n"}'
   fi
 }
@@ -39,7 +39,7 @@ function print_tail() {
 
   if [[ "$PRINT_TAIL" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<69;c++) printf "="; printf "\n"}'
-    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "file", "line", "growth", "shrink", "net(+/-)" }'
+    awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "files", "lines", "growth", "shrink", "net(+/-)" }'
   fi
 }
 
@@ -56,10 +56,8 @@ function print_tail() {
 # 
 # 'git_file_churn --after="2014-06-21"'
 # 'git_file_churn --after="2014-06-21 --author=dmillett'
-#
 function git_churn() {
 
-  gitargs=($@)
   git log --numstat "$@"| grep "^[0-9]" | awk '{
     fmods[$3]++;
     adds[$3] += $1;
@@ -71,15 +69,14 @@ function git_churn() {
     shrink += $2;
   }
   END {
-    d="|"
-        for (f in fmods)
+    for (f in fmods)
     {
       net =  adds[f] - subtracts[f]
-      printf("%s %7s %s %7s %s %7s %s %7s %s %8s %s %-s %s\n", d, fmods[f], d, lmods[f], d, adds[f], d, subtracts[f], d, net, d, f, d)
+      printf("| %7s | %7s | %7s | %7s | %8s | %-s |\n", fmods[f], lmods[f], adds[f], subtracts[f], net, f)
     }
 
     totals = growth - shrink
-    printf("%s %7s %s %7s %s %7s %s %7s %s %8s %s Stat Totals %s\n", d, ftotal, d, ltotal, d, growth, d, shrink, d, totals, d, d)
+    printf("| %7s | %7s | %7s | %7s | %8s | Stat Totals |\n", ftotal, ltotal, growth, shrink, totals)
   }'
 }
 
@@ -136,4 +133,83 @@ function git_net_shrink() {
 function git_file_sort() {
   print_header
   git_churn "$@" | sort --key=12
+}
+
+#
+# Print the header (if toggled 'true')
+function print_date_tail() {
+
+  if [[ "$PRINT_TAIL" == "true" ]]; then
+    awk 'BEGIN{ for(c=0;c<65;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "| %10s | %7s | %7s | %-7s | %-7s | %7s |\n", "dates", "files", "lines", "growth", "shrink", "net(+/-)" }'
+  fi
+}
+
+function git_churn_dates() {
+
+  git log --numstat --date=short "$@"| grep "^[0-9\|Date:]" | awk '{
+
+    if ( $1 == "Date:" )
+    {
+      commit_date = $2
+    }
+    else
+    {
+      dmods[commit_date]++;
+      grow[commit_date] += $1;
+      shrink[commit_date] += $2;
+      fmods[commit_date] = fmods[commit_date] "," $3
+      lmods[commit_date] += ($1 + $2);
+      fmods[commit_date]++;
+    }
+  }
+  END {
+    for (t in dmods)
+    {
+      net =  grow[t] - shrink[t]
+      printf("| %10s | %7s | %7s | %7s | %7s | %8s |\n", t, fmods[t], lmods[t], grow[t], shrink[t], net)
+    }
+  }'
+}
+
+#
+# Sort file modification count ascending
+function git_date_churn() {
+  git_churn_dates "$@" | sort -n --key=2
+  print_date_tail
+}
+
+#
+# Sort by line modification count per file ascending
+function git_date_files() {
+  git_churn_dates "$@" | sort -n --key=4
+  print_date_tail
+}
+
+#
+# Sort by line modification count per file ascending
+function git_date_lines() {
+  git_churn_dates "$@" | sort -n --key=6
+  print_date_tail
+}
+
+#
+# Sort by line modification count per file ascending
+function git_date_growth() {
+  git_churn_dates | sort -n --key=8
+  print_date_tail
+}
+
+#
+# Sort by line modification count per file ascending
+function git_date_shrink() {
+  git_churn_dates | sort -n --key=10
+  print_date_tail
+}
+
+#
+# Sort by line modification count per file ascending
+function git_date_net() {
+  git_churn_dates | sort -n --key=12
+  print_date_tail
 }
