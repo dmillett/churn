@@ -1,32 +1,30 @@
 bash-help
 =========
-
+A summary of file and line modifications, including growth/shrink, to identify code "hot spots".
 Customization of git prompts, code commit statistics and other beneficial bash helper files.
 
 ## git-commit-churn.sh
 Use to identify commit file/line churn for a specific git project. This is helpful for 
-highlighting potentially fragile and coupled code within legacy projects by identifying:
+highlighting potentially fragile and coupled code (todo: refactor :-) by identifying:
 
 1. How many times a specific file was updated
 2. How many lines were modified for all of the file mods
 3. Line additions
 4. Line removals
-
+5. Net growth/shrink of the codebase
 The function will pass along other *git log* arguments and apply them. Thus it is possible
 to search for commit stats with date ranges, authoring, etc. *Note* that it does combine 
 stats for file moves and renames
 
 ###*churn examples:*
 ##### unsorted file, line, growth, shrink
-```
-[~/bash/bash-help:master(+,*)]$ git_churn
-|      18 |     320 |     214 |     106 |      108 | README.md |
-|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
-|       3 |     108 |      54 |      54 |        0 | git-help.sh |
-|       1 |     202 |     202 |       0 |      202 | LICENSE-2.0 |
-|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
-|      51 |    1485 |    1078 |     407 |      671 | Stat Totals |
-```
+1. git_file_churn()
+2. git_line_churn()
+3. git_line_growth()
+4. git_line_shrink()
+5. git_net_growth()
+6. git_net_shrink()
+7. git_file_sort()
 ##### sort by file modification count 
 ```
 [~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
@@ -51,7 +49,7 @@ stats for file moves and renames
 =====================================================================
 |    file |    line | growth  | shrink  | net(+/-) | filename/stats |
 ```
-##### net line growth by author and file type (file pattern last)
+##### net line growth by author and file type with file pattern(s)
 ```
 [~/bash/bash-help:master()]$ git_net_growth --author=dbmillett -- "*.sh"
 |       3 |     108 |      54 |      54 |        0 | git-help.sh |
@@ -63,6 +61,13 @@ stats for file moves and renames
 ```
 
 ##### commits by date for: file, line, growth, shrink, net
+Find out when the most/least modifications happened
+1. git_date_churn()
+2. git_date_files
+3. git_date_lines()
+4. git_date_growth()
+5. git_date_shrink()
+6. git_date_net()
 ```
 [~/bash/bash-help:master()]$ git_date_growth
 | 2012-12-18 |       1 |       2 |       1 |       1 |        0 |
