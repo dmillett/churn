@@ -73,7 +73,7 @@ Find out when the most/least modifications happened
 6. git_net_growth_dates()
 7. git_net_shrink_dates()
 ```
-[~/bash/bash-help:master()]$ git_date_growth
+[~/bash/bash-help:master()]$ git_line_growth_dates
 | 2012-12-18 |       1 |       2 |       1 |       1 |        0 |
 | 2014-11-14 |       2 |       4 |       2 |       2 |        0 |
 | 2012-08-03 |       3 |       5 |       3 |       2 |        1 |
