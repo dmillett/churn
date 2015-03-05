@@ -66,11 +66,12 @@ stats for file moves and renames
 Find out when the most/least modifications happened
 
 1. git_date_churn()
-2. git_date_files
-3. git_date_lines()
-4. git_date_growth()
-5. git_date_shrink()
-6. git_date_net()
+2. git_file_churn_dates
+3. git_line_churn_dates()
+4. git_line_growth_dates()
+5. git_line_shrink_dates()
+6. git_net_growth_dates()
+7. git_net_shrink_dates()
 ```
 [~/bash/bash-help:master()]$ git_date_growth
 | 2012-12-18 |       1 |       2 |       1 |       1 |        0 |

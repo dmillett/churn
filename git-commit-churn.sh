@@ -181,35 +181,43 @@ function git_date_churn() {
 
 #
 # Sort by line modification count per file ascending
-function git_date_files() {
+function git_file_churn_dates() {
   git_churn_dates "$@" | sort -n --key=4
   print_date_tail
 }
 
 #
 # Sort by line modification count per file ascending
-function git_date_lines() {
+function git_line_churn_dates() {
   git_churn_dates "$@" | sort -n --key=6
   print_date_tail
 }
 
 #
 # Sort by line modification count per file ascending
-function git_date_growth() {
+function git_line_growth_dates() {
   git_churn_dates | sort -n --key=8
   print_date_tail
 }
 
 #
 # Sort by line modification count per file ascending
-function git_date_shrink() {
+function git_line_shrink_dates() {
   git_churn_dates | sort -n --key=10
   print_date_tail
 }
 
 #
 # Sort by line modification count per file ascending
-function git_date_net() {
+function git_net_growth_dates() {
   git_churn_dates | sort -n --key=12
   print_date_tail
+}
+
+#
+# Sort by net shrink
+function git_net_shrink_dates() {
+  print_header
+  git_churn_dates "$@" | sort -n -r --key=12
+  print_tail
 }
