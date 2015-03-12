@@ -21,18 +21,20 @@ to search for commit stats with date ranges, authoring, file name patterns, etc.
 possible to find dates with the largest/smallest churn in addition to what commit message
 prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
 
-1. *churn by file:*
+1. **churn by file:**
   - git_file_churn(), git_line_churn(), git_line_growth(), git_line_shrink()
     git_net_growth(), git_net_shrink(), git_file_sort()
-2. *churn by date:*
+2. **churn by date:**
   - git_date_churn(), git_file_churn_dates(), git_line_churn_dates(), git_line_growth_dates()
     git_line_shrink_dates(), git_net_growth_dates(), git_net_shrink_dates()
-3. *churn by message:*
+3. **churn by message:**
   - git_message_churn(), git_file_churn_messages, git_line_churn_messages()
     git_line_growth_messages(), git_line_shrink_messages(), git_net_growth_messages()
-    git_net_shrink_messages(), git_commit_message_prefix()
+    git_net_shrink_messages()
+4. **toggles:**
+  - git_churn_toggle_header(), git_churn_toggle_tail(), git_commit_message_prefix()
 
-*Note* that it does combine stats for file moves and renames.
+**Note** that it does combine stats for file moves and renames.
 
 ##### sort by file modification count
 ```
@@ -77,7 +79,6 @@ for a given commit message (feature-id).
 
 # What files were updated the most during this time?
 [~/bash/bash-help:master()]$ git_line_churn --after=2015-03-01 --before=2015-03-03
-git_line_churn_dates --after=2015-02-01
 |       1 |       2 |       1 |       1 |        0 | git-simple-prompt.sh |
 |       2 |      18 |       9 |       9 |        0 | git-commit-churn.sh |
 |       1 |      20 |      10 |      10 |        0 | README.md |
