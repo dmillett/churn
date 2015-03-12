@@ -124,7 +124,7 @@ function git_net_growth() {
 # Sort by net shrink
 function git_net_shrink() {
   print_header
-  git_churn "$@" | sort -n -r --key=10
+  git_churn "$@" | sort -nr --key=10
   print_tail
 }
 
@@ -196,28 +196,106 @@ function git_line_churn_dates() {
 #
 # Sort by line modification count per file ascending
 function git_line_growth_dates() {
-  git_churn_dates | sort -n --key=8
+  git_churn_dates "$@" | sort -n --key=8
   print_date_tail
 }
 
 #
 # Sort by line modification count per file ascending
 function git_line_shrink_dates() {
-  git_churn_dates | sort -n --key=10
+  git_churn_dates "$@" | sort -n --key=10
   print_date_tail
 }
 
 #
 # Sort by line modification count per file ascending
 function git_net_growth_dates() {
-  git_churn_dates | sort -n --key=12
+  git_churn_dates "$@" | sort -n --key=12
   print_date_tail
 }
 
 #
 # Sort by net shrink
 function git_net_shrink_dates() {
-  print_header
-  git_churn_dates "$@" | sort -n -r --key=12
-  print_tail
+  git_churn_dates "$@" | sort -nr --key=12
+  print_date_tail
+}
+
+COMMIT_MSG_PREFIX=" "
+
+function git_commit_message_prefix() {
+  export COMMIT_MSG_PREFIX="$1"
+}
+
+function git_churn_messages() {
+
+  git log --numstat "$@" | grep "^[^Author:\|Date:\|commit\|Merge]" | awk -v prefix="$COMMIT_MSG_PREFIX" '{
+
+    if ($1 ~ /[^0-9\|\s]+/)
+    {
+      split($1, a, prefix);
+      commit_msg=a[1];
+    }
+    else
+    {
+      dmods[commit_msg]++;
+      grow[commit_msg] += $1;
+      shrink[commit_msg] += $2;
+      fmods[commit_msg] = fmods[commit_msg] "," $3
+      lmods[commit_msg] += ($1 + $2);
+      fmods[commit_msg]++;
+    }
+  }
+  END {
+    for (t in dmods)
+    {
+      net =  grow[t] - shrink[t]
+      printf("| %20s | %7s | %7s | %7s | %7s | %8s |\n", t, fmods[t], lmods[t], grow[t], shrink[t], net)
+    }
+  }'
+}
+
+#
+# Print the header (if toggled 'true')
+function print_commit_msg_tail() {
+
+  if [[ "$PRINT_TAIL" == "true" ]]; then
+    awk 'BEGIN{ for(c=0;c<75;c++) printf "="; printf "\n"}'
+    awk 'BEGIN { printf "| %20s | %7s | %7s | %-7s | %-7s | %7s |\n", "message", "files", "lines", "growth", "shrink", "net(+/-)" }'
+  fi
+}
+
+function git_message_churn() {
+  git_churn_messages "$@" | sort -n --key=2
+  print_commit_msg_tail
+}
+
+function git_file_churn_messages() {
+  git_churn_messages "$@" | sort -n --key=4
+  print_commit_msg_tail
+}
+
+function git_line_churn_messages() {
+  git_churn_messages "$@" | sort -n --key=6
+  print_commit_msg_tail
+}
+
+function git_line_growth_messages() {
+  git_churn_messages "$@" | sort -n --key=8
+  print_commit_msg_tail
+}
+
+function git_line_shrink_messages() {
+  git_churn_messages "$@" | sort -n --key=10
+  print_commit_msg_tail
+}
+
+function git_net_growth_messages() {
+  git_churn_messages "$@" | sort -n --key=12
+  print_commit_msg_tail
+}
+
+function git_net_shrink_messages() {
+  git_churn_messages "$@" | sort -nr --key=12
+  print_commit_msg_tail
 }

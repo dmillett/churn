@@ -63,7 +63,8 @@ stats for file moves and renames
 ```
 
 ##### commits by date for: file, line, growth, shrink, net
-Find out when the most/least modifications happened
+Find out when the most/least modifications happened and then use that in conjunction
+with 'git_file_churn --after=xxx --before=xxx + y' to see file behavior
 
 1. git_date_churn()
 2. git_file_churn_dates
@@ -97,6 +98,40 @@ Find out when the most/least modifications happened
 =================================================================
 |      dates |   files |   lines | growth  | shrink  | net(+/-) |
 ```
+
+##### commits with commit message prefix for: file, line, growth, shrink, net
+Find out which commit message prefixes the most/least modifications happened and
+then use that in conjunction with 'git_file_churn --after=xxx --before=xxx + y'
+to see file behavior. For example, if a bug/feature identifier is always used
+to prefix a commit message with 'git_commit_message_prefix' (ex: FOO-123), it is
+possible to search for all 'FOO-' commit prefixes. By default, it will take the
+first word of the commit message.
+
+1. git_message_churn()
+2. git_file_churn_messages
+3. git_line_churn_messages()
+4. git_line_growth_messages()
+5. git_line_shrink_messages()
+6. git_net_growth_messages()
+7. git_net_shrink_messages()
+8. git_commit_message_prefix()
+
+```
+[~/bash/bash-help:master()]$ git_net_growth_messages --after=2015-02-01
+|               Update |       3 |      15 |       6 |       9 |       -3 |
+|               adding |       3 |      24 |      12 |      12 |        0 |
+|             aligning |       1 |      16 |       8 |       8 |        0 |
+|                 Auto |       1 |      12 |       6 |       6 |        0 |
+|           Correcting |       2 |      12 |       6 |       6 |        0 |
+|                Using |       2 |     111 |      56 |      55 |        1 |
+|              Updated |       1 |      60 |      32 |      28 |        4 |
+|               change |       2 |      29 |      19 |      10 |        9 |
+|                Shows |       1 |      38 |      29 |       9 |       20 |
+|               Adding |       5 |     154 |     132 |      22 |      110 |
+===========================================================================
+|              message |   files |   lines | growth  | shrink  | net(+/-) |
+```
+
 
 ## git-simple-prompt.sh
 Customizes the command prompt within a git project directory. It
