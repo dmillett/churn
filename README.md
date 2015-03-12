@@ -3,29 +3,36 @@ bash-help
 A summary of file and line modifications, including growth/shrink, to identify code "hot spots".
 Customization of git prompts, code commit statistics and other beneficial bash helper files.
 
-## git-commit-churn.sh
+# git-commit-churn.sh
 Use to identify commit file/line churn for a specific git project. This is helpful for 
 highlighting potentially fragile and coupled code (todo: refactor :-) by identifying:
 
-1. How many times a specific file was updated
-2. How many lines were modified for all of the file mods
-3. Line additions
-4. Line removals
-5. Net growth/shrink of the codebase
-
-The function will pass along other *git log* arguments and apply them. Thus it is possible
-to search for commit stats with date ranges, authoring, etc. *Note* that it does combine 
-stats for file moves and renames
+1. What files changed the most/least?
+2. When did the most/least file modifications occur?
+3. What feature/bug/comment did the most/least file modification occur?
+4. Line modifications
+5. Line additions
+6. Line removals
+7. Net growth/shrink of the codebase
 
 ###*churn examples:*
-##### unsorted file, line, growth, shrink
-1. git_file_churn()
-2. git_line_churn()
-3. git_line_growth()
-4. git_line_shrink()
-5. git_net_growth()
-6. git_net_shrink()
-7. git_file_sort()
+The function will pass along other *git log* arguments and apply them. Thus it is possible
+to search for commit stats with date ranges, authoring, file name patterns, etc. It is
+possible to find dates with the largest/smallest churn in addition to what commit message
+prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
+
+1. *churn by file:*
+  - git_file_churn(), git_line_churn(), git_line_growth(), git_line_shrink()
+    git_net_growth(), git_net_shrink(), git_file_sort()
+2. *churn by date:*
+  - git_date_churn(), git_file_churn_dates(), git_line_churn_dates(), git_line_growth_dates()
+    git_line_shrink_dates(), git_net_growth_dates(), git_net_shrink_dates()
+3. *churn by message:*
+  - git_message_churn(), git_file_churn_messages, git_line_churn_messages()
+    git_line_growth_messages(), git_line_shrink_messages(), git_net_growth_messages()
+    git_net_shrink_messages(), git_commit_message_prefix()
+
+*Note* that it does combine stats for file moves and renames.
 
 ##### sort by file modification count
 ```
@@ -40,20 +47,10 @@ stats for file moves and renames
 |      18 |     320 |     214 |     106 |      108 | README.md |
 |      51 |    1485 |    1078 |     407 |      671 | Stat Totals |
 ```
-##### pass other 'git log' arguments through
-```
-[~/bash/bash-help:master()]$ git_line_churn --after=2014-01-01
-|       4 |      18 |       9 |       9 |        0 | git-simple-prompt.sh |
-|       3 |     108 |      54 |      54 |        0 | git-help.sh |
-|      12 |     267 |     167 |     100 |       67 | README.md |
-|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
-|      31 |     684 |     445 |     239 |      206 | Stat Totals |
-=====================================================================
-|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
-```
+
 ##### net line growth by author and file type with file pattern(s)
 ```
-[~/bash/bash-help:master()]$ git_net_growth --author=dbmillett -- "*.sh"
+[~/bash/bash-help:master()]$ git_net_growth --after=2014-01-01 --author=dbmillett -- "*.sh"
 |       3 |     108 |      54 |      54 |        0 | git-help.sh |
 |      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
 |      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
@@ -62,76 +59,49 @@ stats for file moves and renames
 |    file |    line | growth  | shrink  | net(+/-) | filename/stats |
 ```
 
-##### commits by date for: file, line, growth, shrink, net
-Find out when the most/least modifications happened and then use that in conjunction
-with 'git_file_churn --after=xxx --before=xxx + y' to see file behavior
+##### use churn by file/date/message in conjunction with each other
+Sometimes it is helpful to find out what files changed on a specific date
+for a given commit message (feature-id).
 
-1. git_date_churn()
-2. git_file_churn_dates
-3. git_line_churn_dates()
-4. git_line_growth_dates()
-5. git_line_shrink_dates()
-6. git_net_growth_dates()
-7. git_net_shrink_dates()
 ```
-[~/bash/bash-help:master()]$ git_line_growth_dates
-| 2012-12-18 |       1 |       2 |       1 |       1 |        0 |
-| 2014-11-14 |       2 |       4 |       2 |       2 |        0 |
-| 2012-08-03 |       3 |       5 |       3 |       2 |        1 |
-| 2012-10-25 |       2 |       9 |       6 |       3 |        3 |
-| 2014-06-16 |       1 |      12 |       6 |       6 |        0 |
-| 2012-12-17 |       1 |      16 |      13 |       3 |       10 |
+# When did the file modifications occur?
+[~/bash/bash-help:master()]$ git_line_churn_dates --after=2015-02-01
+| 2015-03-05 |       4 |      34 |      22 |      12 |       10 |
 | 2015-02-27 |       5 |      39 |      18 |      21 |       -3 |
-| 2012-12-09 |       2 |      32 |      19 |      13 |        6 |
 | 2015-03-02 |       4 |      40 |      20 |      20 |        0 |
-| 2015-03-05 |       3 |      31 |      20 |      11 |        9 |
-| 2014-06-26 |       2 |      29 |      27 |       2 |       25 |
 | 2015-02-26 |       2 |     111 |      56 |      55 |        1 |
-| 2012-08-02 |       5 |      85 |      67 |      18 |       49 |
-| 2014-06-25 |       3 |     110 |      78 |      32 |       46 |
-| 2014-06-23 |       3 |      91 |      87 |       4 |       83 |
-| 2012-07-15 |       1 |     192 |      93 |      99 |       -6 |
-| 2014-06-24 |       8 |     210 |     122 |      88 |       34 |
-| 2012-06-20 |       1 |     162 |     162 |       0 |      162 |
+| 2015-03-11 |       2 |     129 |     121 |       8 |      113 |
 | 2015-03-04 |       6 |     252 |     193 |      59 |      134 |
-| 2012-08-01 |       4 |     298 |     269 |      29 |      240 |
 =================================================================
 |      dates |   files |   lines | growth  | shrink  | net(+/-) |
-```
 
-##### commits with commit message prefix for: file, line, growth, shrink, net
-Find out which commit message prefixes the most/least modifications happened and
-then use that in conjunction with 'git_file_churn --after=xxx --before=xxx + y'
-to see file behavior. For example, if a bug/feature identifier is always used
-to prefix a commit message with 'git_commit_message_prefix' (ex: FOO-123), it is
-possible to search for all 'FOO-' commit prefixes. By default, it will take the
-first word of the commit message.
+# What files were updated the most during this time?
+[~/bash/bash-help:master()]$ git_line_churn --after=2015-03-01 --before=2015-03-03
+git_line_churn_dates --after=2015-02-01
+|       1 |       2 |       1 |       1 |        0 | git-simple-prompt.sh |
+|       2 |      18 |       9 |       9 |        0 | git-commit-churn.sh |
+|       1 |      20 |      10 |      10 |        0 | README.md |
+|       4 |      40 |      20 |      20 |        0 | Stat Totals |
+=====================================================================
+|   files |   lines | growth  | shrink  | net(+/-) | filename/stats |
 
-1. git_message_churn()
-2. git_file_churn_messages
-3. git_line_churn_messages()
-4. git_line_growth_messages()
-5. git_line_shrink_messages()
-6. git_net_growth_messages()
-7. git_net_shrink_messages()
-8. git_commit_message_prefix()
-
-```
-[~/bash/bash-help:master()]$ git_net_growth_messages --after=2015-02-01
-|               Update |       3 |      15 |       6 |       9 |       -3 |
-|               adding |       3 |      24 |      12 |      12 |        0 |
+# Which commit messages and/or feature id was responsible?
+[~/bash/bash-help:master()]$ git_line_churn_messages --after=2015-03-01 --before=2015-03-03
 |             aligning |       1 |      16 |       8 |       8 |        0 |
-|                 Auto |       1 |      12 |       6 |       6 |        0 |
-|           Correcting |       2 |      12 |       6 |       6 |        0 |
-|                Using |       2 |     111 |      56 |      55 |        1 |
-|              Updated |       1 |      60 |      32 |      28 |        4 |
-|               change |       2 |      29 |      19 |      10 |        9 |
-|                Shows |       1 |      38 |      29 |       9 |       20 |
-|               Adding |       5 |     154 |     132 |      22 |      110 |
+|               adding |       3 |      24 |      12 |      12 |        0 |
 ===========================================================================
 |              message |   files |   lines | growth  | shrink  | net(+/-) |
+
+# How much were files modified for that date + commit message?
+[~/bash/bash-help:master()]$ git_line_churn --after=2015-03-01 --before=2015-03-03 --grep aligning
+|       1 |      16 |       8 |       8 |        0 | git-commit-churn.sh |
+|       1 |      16 |       8 |       8 |        0 | Stat Totals |
+=====================================================================
+|   files |   lines | growth  | shrink  | net(+/-) | filename/stats |
 ```
 
+*Note:* This will take the characters up to the first white space for commit message.
+To alter the commit message prefix use *git_commit_message_prefix()*.
 
 ## git-simple-prompt.sh
 Customizes the command prompt within a git project directory. It
