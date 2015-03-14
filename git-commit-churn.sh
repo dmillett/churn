@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 PRINT_HEADER="false"
-PRINT_TAIL="true"
+PRINT_FOOTER="true"
+PRINT_TOTAL_STATS="true"
 
 #
 # Toggle printing the header (off by default)
@@ -14,12 +15,21 @@ function git_churn_toggle_header() {
   fi
 }
 
-function git_churn_toggle_tail() {
+function git_churn_toggle_footer() {
 
-  if [[ "$PRINT_TAIL" == "true" ]]; then
-    export PRINT_TAIL="false"
+  if [[ "$PRINT_FOOTER" == "true" ]]; then
+    export PRINT_FOOTER="false"
   else
-    export PRINT_TAIL="true"
+    export PRINT_FOOTER="true"
+  fi
+}
+
+function git_churn_toggle_total_stats() {
+
+  if [[ "$PRINT_TOTAL_STATS" == "true" ]]; then
+    export PRINT_TOTAL_STATS="false"
+  else
+    export PRINT_TOTAL_STATS="true"
   fi
 }
 
@@ -35,10 +45,10 @@ function print_header() {
 
 #
 # Print the header (if toggled 'true')
-function print_tail() {
+function print_footer() {
 
-  if [[ "$PRINT_TAIL" == "true" ]]; then
-    awk 'BEGIN{ for(c=0;c<69;c++) printf "="; printf "\n"}'
+  if [[ "$PRINT_FOOTER" == "true" ]]; then
+    awk 'BEGIN { for(c=0;c<69;c++) printf "="; printf "\n"}'
     awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "files", "lines", "growth", "shrink", "net(+/-)" }'
   fi
 }
@@ -58,7 +68,8 @@ function print_tail() {
 # 'git_file_churn --after="2014-06-21 --author=dmillett'
 function git_churn() {
 
-  git log --numstat "$@"| grep "^[0-9]" | awk '{
+  git log --numstat "$@"| grep "^[0-9]" | awk -v stats="$PRINT_TOTAL_STATS" '{
+
     fmods[$3]++;
     adds[$3] += $1;
     subtracts[$3] += $2;
@@ -69,14 +80,18 @@ function git_churn() {
     shrink += $2;
   }
   END {
+
     for (f in fmods)
     {
       net =  adds[f] - subtracts[f]
       printf("| %7s | %7s | %7s | %7s | %8s | %-s |\n", fmods[f], lmods[f], adds[f], subtracts[f], net, f)
     }
 
-    totals = growth - shrink
-    printf("| %7s | %7s | %7s | %7s | %8s | Stat Totals |\n", ftotal, ltotal, growth, shrink, totals)
+    if (stats == "true")
+    {
+      totals = growth - shrink
+      printf("| %7s | %7s | %7s | %7s | %8s | Stat Totals |\n", ftotal, ltotal, growth, shrink, totals)
+    }
   }'
 }
 
@@ -85,7 +100,7 @@ function git_churn() {
 function git_file_churn() {
   print_header
   git_churn "$@" | sort -n --key=2
-  print_tail
+  print_footer
 }
 
 #
@@ -93,7 +108,7 @@ function git_file_churn() {
 function git_line_churn() {
   print_header
   git_churn "$@" | sort -n --key=4
-  print_tail
+  print_footer
 }
 
 #
@@ -101,7 +116,7 @@ function git_line_churn() {
 function git_line_growth() {
   print_header
   git_churn "$@" | sort -n --key=6
-  print_tail
+  print_footer
 }
 
 #
@@ -109,7 +124,7 @@ function git_line_growth() {
 function git_line_shrink() {
   print_header
   git_churn "$@" | sort -n --key=8
-  print_tail
+  print_footer
 }
 
 #
@@ -117,7 +132,7 @@ function git_line_shrink() {
 function git_net_growth() {
   print_header
   git_churn "$@" | sort -n --key=10
-  print_tail
+  print_footer
 }
 
 #
@@ -125,7 +140,7 @@ function git_net_growth() {
 function git_net_shrink() {
   print_header
   git_churn "$@" | sort -nr --key=10
-  print_tail
+  print_footer
 }
 
 #
@@ -137,9 +152,9 @@ function git_file_sort() {
 
 #
 # Print the header (if toggled 'true')
-function print_date_tail() {
+function __print_date_tail() {
 
-  if [[ "$PRINT_TAIL" == "true" ]]; then
+  if [[ "$PRINT_FOOTER" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<65;c++) printf "="; printf "\n"}'
     awk 'BEGIN { printf "| %10s | %7s | %7s | %-7s | %-7s | %7s |\n", "dates", "files", "lines", "growth", "shrink", "net(+/-)" }'
   fi
@@ -147,7 +162,7 @@ function print_date_tail() {
 
 function git_churn_dates() {
 
-  git log --numstat --date=short "$@"| grep "^[0-9\|Date:]" | awk '{
+  git log --numstat --date=short "$@"| grep "^[0-9\|Date:]" | awk -v stats="$PRINT_TOTAL_STATS" '{
 
     if ( $1 == "Date:" )
     {
@@ -161,13 +176,24 @@ function git_churn_dates() {
       fmods[commit_date] = fmods[commit_date] "," $3
       lmods[commit_date] += ($1 + $2);
       fmods[commit_date]++;
+      ftotal++;
+      ltotal += ($1 + $2);
+      tgrowth += $1;
+      tshrink += $2;
     }
   }
   END {
+    # This always gets printed last due to 'for loop' in awk
     for (t in dmods)
     {
       net =  grow[t] - shrink[t]
       printf("| %10s | %7s | %7s | %7s | %7s | %8s |\n", t, fmods[t], lmods[t], grow[t], shrink[t], net)
+    }
+
+    if (stats == "true")
+    {
+      totals = tgrowth - tshrink
+      #printf("| Stat Totals | %7s | %7s | %7s | %7s | %8s |\n", ftotal, ltotal, tgrowth, tshrink, totals)
     }
   }'
 }
@@ -221,36 +247,66 @@ function git_net_shrink_dates() {
   print_date_tail
 }
 
-COMMIT_MSG_PREFIX=" "
-
-function git_commit_message_prefix() {
+COMMIT_MSG_PREFIX=""
+#
+# Complimentary with grep=, since this only looks at the first "word"
+function git_churn_commit_message_prefix() {
   export COMMIT_MSG_PREFIX="$1"
 }
 
+#
+# Will pick up all the text until the first white space
 function git_churn_messages() {
 
-  git log --numstat "$@" | grep "^[^Author:\|Date:\|commit\|Merge]" | awk -v prefix="$COMMIT_MSG_PREFIX" '{
+  git log --numstat "$@" | grep "^[^Author:\|Date:\|commit\|Merge]" | \
+    awk -v stats="$PRINT_TOTAL_STATS" -v prefix="$COMMIT_MSG_PREFIX" '{
 
     if ($1 ~ /[^0-9\|\s]+/)
     {
-      split($1, a, prefix);
-      commit_msg=a[1];
+      if (length(commit_msg) == 0 || nmbr == "true")
+      {
+        if (prefix != "" && $1 ~ prefix)
+        {
+          commit_msg = $1;
+        }
+        else if (prefix == "" && $1 != "")
+        {
+          commit_msg = $1;
+        }
+
+        nmbr = "false";
+      }
     }
     else
     {
-      dmods[commit_msg]++;
-      grow[commit_msg] += $1;
-      shrink[commit_msg] += $2;
-      fmods[commit_msg] = fmods[commit_msg] "," $3
-      lmods[commit_msg] += ($1 + $2);
-      fmods[commit_msg]++;
+      nmbr = "true"
+      if (commit_msg != "")
+      {
+        dmods[commit_msg]++;
+        grow[commit_msg] += $1;
+        shrink[commit_msg] += $2;
+        fmods[commit_msg] = fmods[commit_msg] "," $3
+        lmods[commit_msg] += ($1 + $2);
+        fmods[commit_msg]++;
+        ftotal++;
+        ltotal += ($1 + $2);
+        tgrowth += $1;
+        tshrink += $2;
+      }
     }
   }
   END {
+    # This always gets printed last due to 'for loop' in awk
     for (t in dmods)
     {
       net =  grow[t] - shrink[t]
       printf("| %20s | %7s | %7s | %7s | %7s | %8s |\n", t, fmods[t], lmods[t], grow[t], shrink[t], net)
+    };
+
+    if (stats == "true")
+    {
+      totals = tgrowth - tshrink
+      #printf("|          Stat Totals | %7s | %7s | %7s | %7s | %8s |\n", ftotal, ltotal, tgrowth, tshrink, totals)
     }
   }'
 }
@@ -259,7 +315,7 @@ function git_churn_messages() {
 # Print the header (if toggled 'true')
 function print_commit_msg_tail() {
 
-  if [[ "$PRINT_TAIL" == "true" ]]; then
+  if [[ "$PRINT_FOOTER" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<75;c++) printf "="; printf "\n"}'
     awk 'BEGIN { printf "| %20s | %7s | %7s | %-7s | %-7s | %7s |\n", "message", "files", "lines", "growth", "shrink", "net(+/-)" }'
   fi
