@@ -32,7 +32,8 @@ prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
     git_line_growth_messages(), git_line_shrink_messages(), git_net_growth_messages()
     git_net_shrink_messages()
 4. **toggles:**
-  - git_churn_toggle_header(), git_churn_toggle_tail(), git_commit_message_prefix()
+  - git_churn_toggle_header(), git_churn_toggle_footer(), git_churn_commit_message_prefix(),
+    git_churn_toggle_total_stats()
 
 **Note** that it does combine stats for file moves and renames.
 
@@ -102,7 +103,7 @@ for a given commit message (feature-id).
 ```
 
 *Note:* This will take the characters up to the first white space for commit message.
-To alter the commit message prefix use *git_commit_message_prefix()*.
+To alter the commit message prefix use *git_churn_commit_message_prefix()*.
 
 ## git-simple-prompt.sh
 Customizes the command prompt within a git project directory. It
@@ -137,14 +138,19 @@ Clone and update your .bashrc file
 
 ###*usage:*
 #####*commit-churn:*
-1. git_churn
-2. git_file_churn_sorted
-3. git_line_churn_sorted
-4. git_line_growth_sorted
-5. git_line_shrink_sorted
-6. git_file_sorted
-7. *git_churn_toggle_header (default 'false')*
-8. *git_churn_toggle_tail (default 'true')*
+1. **churn by file:**
+  - git_file_churn(), git_line_churn(), git_line_growth(), git_line_shrink()
+    git_net_growth(), git_net_shrink(), git_file_sort()
+2. **churn by date:**
+  - git_date_churn(), git_file_churn_dates(), git_line_churn_dates(), git_line_growth_dates()
+    git_line_shrink_dates(), git_net_growth_dates(), git_net_shrink_dates()
+3. **churn by message:**
+  - git_message_churn(), git_file_churn_messages, git_line_churn_messages()
+    git_line_growth_messages(), git_line_shrink_messages(), git_net_growth_messages()
+    git_net_shrink_messages()
+4. **toggles:**
+  - git_churn_toggle_header(), git_churn_toggle_footer(), git_churn_commit_message_prefix(),
+    git_churn_toggle_total_stats()
 
 #####*prompt:*
 1. DEFAULT_PROMPT specifies prompt format for non git projects
