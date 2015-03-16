@@ -183,7 +183,6 @@ function git_churn_dates() {
     }
   }
   END {
-    # This always gets printed last due to 'for loop' in awk
     for (t in dmods)
     {
       net =  grow[t] - shrink[t]
@@ -296,7 +295,6 @@ function git_churn_messages() {
     }
   }
   END {
-    # This always gets printed last due to 'for loop' in awk
     for (t in dmods)
     {
       net =  grow[t] - shrink[t]
