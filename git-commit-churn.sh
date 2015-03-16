@@ -17,7 +17,7 @@ function git_churn_toggle_header() {
 
 function git_churn_toggle_footer() {
 
-  if [[ "$PRINT_FOOTER" == "true" ]]; then
+  if [[ "$PRINT_FOOTER" == "true" || "$1" == "true" ]]; then
     export PRINT_FOOTER="false"
   else
     export PRINT_FOOTER="true"
@@ -37,7 +37,7 @@ function git_churn_toggle_total_stats() {
 # Print the header (if toggled 'true')
 function print_header() {
 
-  if [[ "$PRINT_HEADER" == "true" ]]; then
+  if [[ "$PRINT_HEADER" == "true" || "$1" == "true" ]]; then
     awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "files", "lines", "growth", "shrink", "net(+/-)" }'
     awk 'BEGIN{ for(c=0;c<69;c++) printf "="; printf "\n"}'
   fi
@@ -47,7 +47,7 @@ function print_header() {
 # Print the header (if toggled 'true')
 function print_footer() {
 
-  if [[ "$PRINT_FOOTER" == "true" ]]; then
+  if [[ "$PRINT_FOOTER" == "true" || "$1" == "true" ]]; then
     awk 'BEGIN { for(c=0;c<69;c++) printf "="; printf "\n"}'
     awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "files", "lines", "growth", "shrink", "net(+/-)" }'
   fi
