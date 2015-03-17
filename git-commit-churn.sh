@@ -151,8 +151,18 @@ function git_file_sort() {
 }
 
 #
-# Print the header (if toggled 'true')
-function __print_date_tail() {
+# Print the footer (if toggled 'true')
+function print_date_header() {
+
+  if [[ "$PRINT_HEADER" == "true" || "$1" == "true" ]]; then
+    awk 'BEGIN { printf "| %10s | %7s | %7s | %-7s | %-7s | %7s |\n", "dates", "files", "lines", "growth", "shrink", "net(+/-)" }'
+    awk 'BEGIN{ for(c=0;c<65;c++) printf "="; printf "\n"}'
+  fi
+}
+
+#
+# Print the footer (if toggled 'true')
+function print_date_footer() {
 
   if [[ "$PRINT_FOOTER" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<65;c++) printf "="; printf "\n"}'
@@ -264,22 +274,14 @@ function git_churn_messages() {
     {
       if (length(commit_msg) == 0 || nmbr == "true")
       {
-        if (prefix != "" && $1 ~ prefix)
-        {
-          commit_msg = $1;
-        }
-        else if (prefix == "" && $1 != "")
-        {
-          commit_msg = $1;
-        }
-
+        commit_msg = $1
         nmbr = "false";
       }
     }
-    else
+    else if ($1 ~ /^[0-9]/)
     {
       nmbr = "true"
-      if (commit_msg != "")
+      if (commit_msg != "" && commit_msg ~ prefix)
       {
         dmods[commit_msg]++;
         grow[commit_msg] += $1;
@@ -311,7 +313,17 @@ function git_churn_messages() {
 
 #
 # Print the header (if toggled 'true')
-function print_commit_msg_tail() {
+function print_commit_msg_header() {
+
+  if [[ "$PRINT_HEADER" == "true" || "$1" == "true" ]]; then
+    awk 'BEGIN { printf "| %20s | %7s | %7s | %-7s | %-7s | %7s |\n", "message", "files", "lines", "growth", "shrink", "net(+/-)" }'
+    awk 'BEGIN{ for(c=0;c<75;c++) printf "="; printf "\n"}'
+  fi
+}
+
+#
+# Print the footer (if toggled 'true')
+function print_commit_msg_footer() {
 
   if [[ "$PRINT_FOOTER" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<75;c++) printf "="; printf "\n"}'
@@ -321,35 +333,35 @@ function print_commit_msg_tail() {
 
 function git_message_churn() {
   git_churn_messages "$@" | sort -n --key=2
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
 
 function git_file_churn_messages() {
   git_churn_messages "$@" | sort -n --key=4
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
 
 function git_line_churn_messages() {
   git_churn_messages "$@" | sort -n --key=6
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
 
 function git_line_growth_messages() {
   git_churn_messages "$@" | sort -n --key=8
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
 
 function git_line_shrink_messages() {
   git_churn_messages "$@" | sort -n --key=10
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
 
 function git_net_growth_messages() {
   git_churn_messages "$@" | sort -n --key=12
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
 
 function git_net_shrink_messages() {
   git_churn_messages "$@" | sort -nr --key=12
-  print_commit_msg_tail
+  print_commit_msg_footer
 }
