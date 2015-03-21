@@ -103,6 +103,20 @@ function churn_R_pie_graph_for() {
   Rscript $rfile
 }
 
+# Notes:
+# label orientation: "las=" 0 - parallel, 1 - horizontal, 2 - perpendicular, 3 - vertical
+
 # xrange <- range(dates_data)
 # yrange <- range(lines_data)
 # colors <- rainbow(length(dates_data))
+#
+# actually plots lines
+#> plot(ad$files, type="b", ylim=c(min(ad$shrink),max(ad$lines)), lwd=2, xaxt="n",col="black",ylab="# mod",xlab="")
+#> axis(1,at=1:length(ad$dates),labels=ad$dates, las=2)
+#> lines(ad$lines, col="blue", type="b", lwd=2)
+#> lines(ad$growth, col="green", type="b", lwd=2)
+#> lines(ad$shrink, col="red", type="b", lwd=2)
+#> lines(ad$net, col="orange", type="b", lwd=2)
+#> legend(min(ad$lines), max(ad$lines), c("files", "lines", "growth", "shrink", "net"), cex=0.8, col=c("black", "blue", "green", "red", "orange"), pch=21:22, lty=1:2);
+
+
