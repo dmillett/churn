@@ -141,7 +141,69 @@ function churn_plot_files_and_net() {
   echo "om <- par(mar = c(10,4,5,2) + 0.1)" >> $rfile
   echo "plot(d\$files,type=\"l\",ylim=c(min(d\$shrink),max(d\$lines)),lwd=2,xaxt=\"n\",col=\"black\",ylab=\"# mods\",xlab=\"\")" >> $rfile
   echo "axis(1,at=1:length(d\$filename),labels=d\$filename,las=2)" >> $rfile
-  echo "par(om)" >> $rfile
+  #echo "par(om)" >> $rfile
+  echo "lines(d\$net, col=\"orange\", type=\"l\", lwd=2)" >> $rfile
+
+  # Defaults to 'pdf' output, it should be 'png'
+  chmod 755 $rfile
+  Rscript $rfile
+}
+
+function churn_plot_files_sorted_by() {
+
+  OPTIND=1
+
+  while getopts "i:o:DMFflgsnS:" options; do
+    case $options in
+      D)
+        x="dates";
+        ;;
+      M)
+        x="message";
+        ;;
+      F)
+        x="filename";
+        ;;
+      i)
+        input="$OPTARG";
+        ;;
+      o)
+        output="$OPTARG"
+        ;;
+      f)
+        files="files";
+        ;;
+      l)
+        lines="lines";
+        ;;
+      g)
+        growth="growth";
+        ;;
+      s)
+        shrink="shrink";
+        ;;
+      n)
+        net="net";
+        ;;
+      S)
+        sort="$OPTARG";
+        ;;
+      *)
+        echo "Try \"-i '<some_file>.csv' -o '<output_file>' with one X-axis flag:"
+        echo "-D (dates) -F (filename) -M (message)"
+        echo "and sort flag(s):"
+        echo "  -f (files), -l (lines) -g (growth) -n (net)"
+        ;;
+    esac
+  done
+
+  rfile="$(pwd)/$output.r"
+  echo "#!/usr/bin/Rscript  --vanilla --default-packages=utils" > $rfile
+  echo "d <- read.csv(\"$input\")" >> $rfile
+  echo "ds <- d[order(d\$$sort),]" >> $rfile
+  echo "om <- par(mar = c(10,4,5,2) + 0.1)" >> $rfile
+  echo "plot(d\$files,type=\"l\",ylim=c(min(d\$shrink),max(d\$lines)),lwd=2,xaxt=\"n\",col=\"black\",ylab=\"# mods\",xlab=\"\")" >> $rfile
+  echo "axis(1,at=1:length(d\$filename),labels=d\$filename,las=2)" >> $rfile
   echo "lines(d\$net, col=\"orange\", type=\"l\", lwd=2)" >> $rfile
 
   # Defaults to 'pdf' output, it should be 'png'
