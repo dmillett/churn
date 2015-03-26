@@ -120,91 +120,114 @@ function churn_R_pie_graph_for() {
 # xrange <- range(dates_data)
 # yrange <- range(lines_data)
 # colors <- rainbow(length(dates_data))
-#
-# actually plots lines
-#> plot(ad$files, type="b", ylim=c(min(ad$shrink),max(ad$lines)), lwd=2, xaxt="n",col="black",ylab="# mod",xlab="")
-#> axis(1,at=1:length(ad$dates),labels=ad$dates, las=2)
-#> lines(ad$lines, col="blue", type="b", lwd=2)
-#> lines(ad$growth, col="green", type="b", lwd=2)
-#> lines(ad$shrink, col="red", type="b", lwd=2)
-#> lines(ad$net, col="orange", type="b", lwd=2)
 #> legend(min(ad$lines), max(ad$lines), c("files", "lines", "growth", "shrink", "net"), cex=0.8, col=c("black", "blue", "green", "red", "orange"), pch=21:22, lty=1:2);
-
-#
-# Where file mod count meets net growth/shrink == config files or coupled code
-function churn_plot_files_and_net() {
-
-  input="$1"
-  rfile="$(pwd)/fileplots.r"
-  echo "#!/usr/bin/Rscript  --vanilla --default-packages=utils" > $rfile
-  echo "d <- read.csv(\"$input\")" >> $rfile
-  echo "om <- par(mar = c(10,4,5,2) + 0.1)" >> $rfile
-  echo "plot(d\$files,type=\"l\",ylim=c(min(d\$shrink),max(d\$lines)),lwd=2,xaxt=\"n\",col=\"black\",ylab=\"# mods\",xlab=\"\")" >> $rfile
-  echo "axis(1,at=1:length(d\$filename),labels=d\$filename,las=2)" >> $rfile
-  #echo "par(om)" >> $rfile
-  echo "lines(d\$net, col=\"orange\", type=\"l\", lwd=2)" >> $rfile
-
-  # Defaults to 'pdf' output, it should be 'png'
-  chmod 755 $rfile
-  Rscript $rfile
-}
 
 function churn_plot_files_sorted_by() {
 
   OPTIND=1
+  default=""
 
   while getopts "i:o:DMFflgsnS:" options; do
     case $options in
       D)
-        x="dates";
+        X="dates";
         ;;
       M)
-        x="message";
+        X="message";
         ;;
       F)
-        x="filename";
+        X="filename";
         ;;
       i)
-        input="$OPTARG";
+        INPUT="$OPTARG";
         ;;
       o)
-        output="$OPTARG"
+        OUTPUT="$OPTARG"
         ;;
       f)
         files="files";
+        if [ -z "$default" ]; then
+          default="files"
+        fi
         ;;
       l)
         lines="lines";
+        if [ -z "$default" ]; then
+          default="lines"
+        fi
         ;;
       g)
         growth="growth";
+        if [ -z "$default" ]; then
+          default="growth"
+        fi
         ;;
       s)
         shrink="shrink";
+        if [ -z "$default" ]; then
+          default="shrink"
+        fi
         ;;
       n)
         net="net";
+        if [ -z "$default" ]; then
+          default="net"
+        fi
         ;;
       S)
-        sort="$OPTARG";
+        sc="$OPTARG";
         ;;
       *)
         echo "Try \"-i '<some_file>.csv' -o '<output_file>' with one X-axis flag:"
         echo "-D (dates) -F (filename) -M (message)"
         echo "and sort flag(s):"
-        echo "  -f (files), -l (lines) -g (growth) -n (net)"
+        echo "  -f (files), -l (lines) -g (growth) -s (shrink) -n (net)"
+        return 1;
         ;;
     esac
   done
 
-  rfile="$(pwd)/$output.r"
-  echo "#!/usr/bin/Rscript  --vanilla --default-packages=utils" > $rfile
-  echo "d <- read.csv(\"$input\")" >> $rfile
-  echo "ds <- d[order(d\$$sort),]" >> $rfile
-  echo "om <- par(mar = c(10,4,5,2) + 0.1)" >> $rfile
-  echo "plot(d\$files,type=\"l\",ylim=c(min(d\$shrink),max(d\$lines)),lwd=2,xaxt=\"n\",col=\"black\",ylab=\"# mods\",xlab=\"\")" >> $rfile
-  echo "axis(1,at=1:length(d\$filename),labels=d\$filename,las=2)" >> $rfile
-  echo "lines(d\$net, col=\"orange\", type=\"l\", lwd=2)" >> $rfile
+  if [[ -z "$INPUT" || -z "$X" ]]; then
+    echo "Please Specify input (-i) and x-axis (-D or -F or -M)"
+    return 1;
+  fi
+
+  rfile="$(pwd)/$OUTPUT.r"
+  echo "#!/usr/bin/Rscript --vanilla --default-packages=utils" > $rfile
+  echo "d <- read.csv(\"$INPUT\")" >> $rfile
+  echo "ds <- d" >> $rfile
+
+  if [ ! -z "$sc" ]; then
+    echo "ds <- d[order(d\$$sc),]" >> $rfile
+  fi
+
+  echo "png(filename=\"$OUTPUT.png\")" >> $rfile
+  echo "om <- par(mar = c(10,5,2,2) + 0.1)" >> $rfile
+  echo "plot(ds\$$default, type=\"l\", ylim=c(min(ds\$shrink),max(ds\$lines)), lwd=2, xaxt=\"n\","\
+       "col=190, ylab=\"# mods\", xlab=\"\")" >> $rfile
+  echo "axis(1,at=1:length(ds\$$X),labels=ds\$$X,las=2)" >> $rfile
+
+  if [[ $net == "net" && $default != "net" ]]; then
+    echo "lines(ds\$net, col=\"orange\", type=\"l\", lwd=2)" >> $rfile
+  fi
+
+  if [[ $files == "files" && $default != "files" ]]; then
+    echo "lines(ds\$net, col=\"black\", type=\"l\", lwd=2)" >> $rfile
+  fi
+
+  if [[ $lines == "lines" && $default != "lines" ]]; then
+    echo "lines(ds\$net, col=\"blue\", type=\"l\", lwd=2)" >> $rfile
+  fi
+
+  if [[ $growth == "growth" && $default != "growth" ]]; then
+    echo "lines(ds\$net, col=\"green\", type=\"l\", lwd=2)" >> $rfile
+  fi
+
+  if [[ $shrink == "shrink" && $default != "shrink" ]]; then
+    echo "lines(ds\$net, col=\"red\", type=\"l\", lwd=2)" >> $rfile
+  fi
+
+  echo "dev.off()" >> $rfile
 
   # Defaults to 'pdf' output, it should be 'png'
   chmod 755 $rfile
