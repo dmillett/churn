@@ -212,19 +212,19 @@ function churn_plot_files_sorted_by() {
   fi
 
   if [[ $files == "files" && $default != "files" ]]; then
-    echo "lines(ds\$net, col=\"black\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$files, col=\"black\", type=\"l\", lwd=2)" >> $rfile
   fi
 
   if [[ $lines == "lines" && $default != "lines" ]]; then
-    echo "lines(ds\$net, col=\"blue\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$lines, col=\"blue\", type=\"l\", lwd=2)" >> $rfile
   fi
 
   if [[ $growth == "growth" && $default != "growth" ]]; then
-    echo "lines(ds\$net, col=\"green\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$growth, col=\"green\", type=\"l\", lwd=2)" >> $rfile
   fi
 
   if [[ $shrink == "shrink" && $default != "shrink" ]]; then
-    echo "lines(ds\$net, col=\"red\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$shrink, col=\"red\", type=\"l\", lwd=2)" >> $rfile
   fi
 
   echo "dev.off()" >> $rfile
