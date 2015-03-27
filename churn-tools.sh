@@ -250,6 +250,8 @@ function churn_plot_files_sorted_by() {
   # Defaults to 'pdf' output, it should be 'png'
   chmod 755 $rfile
   Rscript $rfile > /dev/null 2>&1
-  rm "Rplots.pdf"
+  if [ -f "Rplots.pdf" ]; then
+    rm "Rplots.pdf"
+  fi
 }
 
