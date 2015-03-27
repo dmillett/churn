@@ -105,6 +105,44 @@ for a given commit message (feature-id).
 *Note:* This will take the characters up to the first white space for commit message.
 To alter the commit message prefix use *git_churn_commit_message_prefix()*.
 
+## churn-tools.sh
+Is useful for generating R graphs that plot file/line/line-growth/line-shrink/net-lines against date, filename, and commit message for a repository. The shell plot function will generate an Rscript file (.r) and an image file (.png). The Rscript file may be updated and executed to regenerate the image file. churn-tools will also generate Confluence wiki tables (for markup insertion).
+
+###*churn plot examples:*
+Here is a list of functions to generate R plots. Please note the generated Rscript file is updateable.
+
+1. *churn_to_csv()* - group commit stats by filename
+2. *churn_messages_to_csv()* - group commit stats by commit message prefix
+3. *churn_dates_to_csv()* - group commit stats by date
+4. *churn_plot_files_sorted_by()*
+   a) input/output: -i (input), -o (output, title)
+   b) group type:   -D (date), -F (file), -M (message)
+   c) sort by:      -S "lines" (could use "files" or "growth" or "shrink" or "net")
+   d) plot:         -f (files), -l (lines), -g (line growth), -s (line shrink), -n (net lines)
+
+```
+# Wherever the install location may be
+source ~/dev/bash/bash-help/churn-tools.sh
+
+# Generate the csv files
+churn_to_csv --after=2015-03-01 > filenames.csv
+churn_messages_to_csv --after=2015-03-01 > messages.csv
+
+# Churn by commit message, sorted by lines
+churn_plot_files_sorted_by -i messages.csv -o messages-line-sort -F -l -n -S lines
+
+# Where 'gthumb' is a simple image viewer
+gthumb messages-line-sort.png
+
+# Churn by filename, sorted by number of line modifications
+churn_plot_files_sorted_by -i filenames.csv -o filenames-line-sort -F -f -l -n -g -s -S lines
+gthumb filenames-line-sort.png
+
+# Churn by filename, unsorted (label problems may exist)
+churn_plot_files_sorted_by -i filenames.csv -o filenames -F -f -l -n -g -s
+gthumb filenames.png
+```
+
 ## git-simple-prompt.sh
 Customizes the command prompt within a git project directory. It
 allows for color choice, style, and indicators/suggestions. Toggling
