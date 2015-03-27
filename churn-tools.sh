@@ -103,7 +103,7 @@ function churn_R_pie_graph_for() {
 
   csvfile="$data"
   rfile="$(pwd)/$output.r"
-  echo "#!/usr/bin/Rscript  --vanilla --default-packages=utils" > $rfile
+  echo "#!/usr/bin/Rscript  --vanilla" > $rfile
   echo "data <- read.csv(\"$csvfile\")" >> $rfile
   echo "data_source <- data\$$ds" >> $rfile
   echo "dates_data <- data\$dates" >> $rfile
@@ -211,8 +211,8 @@ function churn_plot_files_sorted_by() {
   echo "grid()" >> $rfile
   echo "axis(1,at=1:length(ds\$$X),labels=ds\$$X, las=2)" >> $rfile
 
-  echo "colors <- c()" >> $rfile
-  echo "options <- c()" >> $rfile
+  echo "colors <- c('black')" >> $rfile
+  echo "options <- c(\"$default\")" >> $rfile
 
   if [[ $files == "files" && $default != "files" ]]; then
     echo "lines(ds\$files, col='brown', type='l', lwd=2)" >> $rfile
@@ -240,15 +240,16 @@ function churn_plot_files_sorted_by() {
 
   if [[ $net == "net" && $default != "net" ]]; then
     echo "lines(ds\$net, col='purple', type='l', lwd=2)" >> $rfile
-   echo "options <- c(options, 'net')" >> $rfile
+   echo "options <- c(options, 'net (+/-)')" >> $rfile
     echo "colors <- c(colors, 'purple')" >> $rfile
   fi
 
-  echo "legend('topright',inset=0.05, c(options, \"$default\"),fill=c(colors, 'black'))" >> $rfile
+  echo "legend('topright',inset=0.05, title='Mod Type', c(options),fill=c(colors))" >> $rfile
   echo "dev.off()" >> $rfile
 
   # Defaults to 'pdf' output, it should be 'png'
   chmod 755 $rfile
-  Rscript $rfile
+  Rscript $rfile > /dev/null 2>&1
+  rm "Rplots.pdf"
 }
 
