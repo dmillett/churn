@@ -115,10 +115,10 @@ Here is a list of functions to generate R plots. Please note the generated Rscri
 2. *churn_messages_to_csv()* - group commit stats by commit message prefix
 3. *churn_dates_to_csv()* - group commit stats by date
 4. *churn_plot_files_sorted_by()*
-   a) input/output: -i (input), -o (output, title)
-   b) group type:   -D (date), -F (file), -M (message)
-   c) sort by:      -S "lines" (could use "files" or "growth" or "shrink" or "net")
-   d) plot:         -f (files), -l (lines), -g (line growth), -s (line shrink), -n (net lines)
+  * input/output: -i (input), -o (output, title)
+  * group type:   -D (date), -F (file), -M (message)
+  * sort by:      -S "lines" (could use "files" or "growth" or "shrink" or "net")
+  * plot:         -f (files), -l (lines), -g (line growth), -s (line shrink), -n (net lines)   
 
 ```
 # Wherever the install location may be
