@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "git-commit-churn.sh"
+source "$(pwd)/git-commit-churn.sh"
 
 function __toggle() {
   git_churn_toggle_header
@@ -193,40 +193,58 @@ function churn_plot_files_sorted_by() {
   fi
 
   rfile="$(pwd)/$OUTPUT.r"
-  echo "#!/usr/bin/Rscript --vanilla --default-packages=utils" > $rfile
+  echo "#!/usr/bin/Rscript --vanilla" > $rfile
   echo "d <- read.csv(\"$INPUT\")" >> $rfile
   echo "ds <- d" >> $rfile
 
   if [ ! -z "$sc" ]; then
-    echo "ds <- d[order(d\$$sc),]" >> $rfile
+    echo "ds <- d[order(-d\$$sc),]" >> $rfile
   fi
 
-  echo "png(filename=\"$OUTPUT.png\")" >> $rfile
+  echo "w <- max(17 * length(ds\$$default), 600)" >> $rfile
+  echo "png(filename=\"$OUTPUT.png\", width=w[1], height=500, bg='dark grey')" >> $rfile
+
   echo "om <- par(mar = c(10,5,2,2) + 0.1)" >> $rfile
-  echo "plot(ds\$$default, type=\"l\", ylim=c(min(ds\$shrink),max(ds\$lines)), lwd=2, xaxt=\"n\","\
-       "col=190, ylab=\"# mods\", xlab=\"\")" >> $rfile
-  echo "axis(1,at=1:length(ds\$$X),labels=ds\$$X,las=2)" >> $rfile
+  echo "plot(ds\$$default, type='l', ylim=c(min(ds\$net),max(ds\$lines)), lwd=2, xaxt='n',"\
+       "ylab='# of Mods', xlab='', main=\"$OUTPUT\")" >> $rfile
 
-  if [[ $net == "net" && $default != "net" ]]; then
-    echo "lines(ds\$net, col=\"orange\", type=\"l\", lwd=2)" >> $rfile
-  fi
+  echo "grid()" >> $rfile
+  echo "axis(1,at=1:length(ds\$$X),labels=ds\$$X, las=2)" >> $rfile
+
+  echo "colors <- c()" >> $rfile
+  echo "options <- c()" >> $rfile
 
   if [[ $files == "files" && $default != "files" ]]; then
-    echo "lines(ds\$files, col=\"black\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$files, col='brown', type='l', lwd=2)" >> $rfile
+    echo "options <- c(options, 'files')" >> $rfile
+    echo "colors <- c(colors, 'brown')" >> $rfile
   fi
 
   if [[ $lines == "lines" && $default != "lines" ]]; then
-    echo "lines(ds\$lines, col=\"blue\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$lines, col='blue', type='l', lwd=2)" >> $rfile
+    echo "options <- c(options, 'lines')" >> $rfile
+    echo "colors <- c(colors, 'blue')" >> $rfile
   fi
 
   if [[ $growth == "growth" && $default != "growth" ]]; then
-    echo "lines(ds\$growth, col=\"green\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$growth, col='green', type='l', lwd=2)" >> $rfile
+    echo "options <- c(options, 'growth')" >> $rfile
+    echo "colors <- c(colors, 'green')" >> $rfile
   fi
 
   if [[ $shrink == "shrink" && $default != "shrink" ]]; then
-    echo "lines(ds\$shrink, col=\"red\", type=\"l\", lwd=2)" >> $rfile
+    echo "lines(ds\$shrink, col='red', type='l', lwd=2)" >> $rfile
+    echo "options <- c(options, 'shrink')" >> $rfile
+    echo "colors <- c(colors, 'red')" >> $rfile
   fi
 
+  if [[ $net == "net" && $default != "net" ]]; then
+    echo "lines(ds\$net, col='purple', type='l', lwd=2)" >> $rfile
+   echo "options <- c(options, 'net')" >> $rfile
+    echo "colors <- c(colors, 'purple')" >> $rfile
+  fi
+
+  echo "legend('topright',inset=0.05, c(options, \"$default\"),fill=c(colors, 'black'))" >> $rfile
   echo "dev.off()" >> $rfile
 
   # Defaults to 'pdf' output, it should be 'png'
