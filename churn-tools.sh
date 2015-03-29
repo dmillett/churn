@@ -122,7 +122,7 @@ function churn_R_pie_graph_for() {
 # colors <- rainbow(length(dates_data))
 #> legend(min(ad$lines), max(ad$lines), c("files", "lines", "growth", "shrink", "net"), cex=0.8, col=c("black", "blue", "green", "red", "orange"), pch=21:22, lty=1:2);
 
-function churn_plot_files_sorted_by() {
+function churn_R_plot() {
 
   OPTIND=1
   default=""
@@ -201,15 +201,18 @@ function churn_plot_files_sorted_by() {
     echo "ds <- d[order(-d\$$sc),]" >> $rfile
   fi
 
-  echo "w <- max(17 * length(ds\$$default), 600)" >> $rfile
-  echo "png(filename=\"$OUTPUT.png\", width=w[1], height=500, bg='dark grey')" >> $rfile
+  echo "w <- max(19 * length(ds\$$default), 600)" >> $rfile
+  echo "h <- 0.70 * w[1]" >> $rfile
+  echo "cx <- max(length(ds\$$default) / 50, 1)" >> $rfile
+  echo "png(filename=\"$OUTPUT.png\", width=w[1], height=h[1], bg='dark grey')" >> $rfile
 
   echo "om <- par(mar = c(10,5,2,2) + 0.1)" >> $rfile
-  echo "plot(ds\$$default, type='l', ylim=c(min(ds\$net),max(ds\$lines)), lwd=2, xaxt='n',"\
-       "ylab='# of Mods', xlab='', main=\"$OUTPUT\")" >> $rfile
+  echo "plot(ds\$$default, type='l', ylim=c(min(ds\$net), max(ds\$lines)), lwd=2, xaxt='n',"\
+       "ylab = NA, xlab = NA, main=\"$OUTPUT\", cex.main=cx[1] + 1)" >> $rfile
 
   echo "grid()" >> $rfile
-  echo "axis(1,at=1:length(ds\$$X),labels=ds\$$X, las=2)" >> $rfile
+  echo "mtext(side = 2, 'Modification Count', line = 2, cex=cx[1] + .3)" >> $rfile
+  echo "axis(1, at=1:length(ds\$$X), labels=ds\$$X, las=2)" >> $rfile
 
   echo "colors <- c('black')" >> $rfile
   echo "options <- c(\"$default\")" >> $rfile
@@ -244,7 +247,7 @@ function churn_plot_files_sorted_by() {
     echo "colors <- c(colors, 'purple')" >> $rfile
   fi
 
-  echo "legend('topright',inset=0.05, title='Mod Type', c(options),fill=c(colors))" >> $rfile
+  echo "legend('topright', inset=0.05, title='Mod Type', c(options), fill=c(colors), cex=cx[1])" >> $rfile
   echo "dev.off()" >> $rfile
 
   # Defaults to 'pdf' output, it should be 'png'

@@ -114,7 +114,7 @@ Here is a list of functions to generate R plots. Please note the generated Rscri
 1. *churn_to_csv()* - group commit stats by filename
 2. *churn_messages_to_csv()* - group commit stats by commit message prefix
 3. *churn_dates_to_csv()* - group commit stats by date
-4. *churn_plot_files_sorted_by()*
+4. *churn_R_plot()*
   * *input/output:* **-i** (input), **-o** (output, title)
   * *group type:* **-D** (date), **-F** (file), **-M** (message)
   * *sort by:* **-S** "lines" (could use "files" or "growth" or "shrink" or "net")
@@ -129,17 +129,17 @@ churn_to_csv --after=2015-03-01 > filenames.csv
 churn_messages_to_csv --after=2015-03-01 > messages.csv
 
 # Churn by commit message, sorted by lines
-churn_plot_files_sorted_by -i messages.csv -o messages-line-sort -M -l -n -S lines
+churn_R_plot -i messages.csv -o messages-line-sort -M -l -n -S lines
 
 # Where 'gthumb' is a simple image viewer
 gthumb messages-line-sort.png
 
 # Churn by filename, sorted by number of line modifications
-churn_plot_files_sorted_by -i filenames.csv -o filenames-line-sort -F -f -l -n -g -s -S lines
+churn_R_plot -i filenames.csv -o filenames-line-sort -F -f -l -n -g -s -S lines
 gthumb filenames-line-sort.png
 
 # Churn by filename, unsorted (label problems may exist)
-churn_plot_files_sorted_by -i filenames.csv -o filenames -F -f -l -n -g -s
+churn_R_plot -i filenames.csv -o filenames -F -f -l -n -g -s
 gthumb filenames.png
 ```
 
