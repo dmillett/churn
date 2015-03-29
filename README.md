@@ -38,7 +38,7 @@ prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
 **Note** that it does combine stats for file moves and renames.
 
 ##### sort by file modification count
-```
+```shell
 [~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
 [~/bash/bash-help:master(+,*)]$ git_file_churn
 |    file |    line | growth  | shrink  | net(+/-) | filename/stats |
@@ -52,7 +52,7 @@ prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
 ```
 
 ##### net line growth by author and file type with file pattern(s)
-```
+```shell
 [~/bash/bash-help:master()]$ git_net_growth --after=2014-01-01 --author=dbmillett -- "*.sh"
 |       3 |     108 |      54 |      54 |        0 | git-help.sh |
 |      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
@@ -66,7 +66,7 @@ prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
 Sometimes it is helpful to find out what files changed on a specific date
 for a given commit message (feature-id).
 
-```
+```shell
 # When did the file modifications occur?
 [~/bash/bash-help:master()]$ git_line_churn_dates --after=2015-02-01
 | 2015-03-05 |       4 |      34 |      22 |      12 |       10 |
@@ -120,7 +120,7 @@ Here is a list of functions to generate R plots. Please note the generated Rscri
   * *sort by:* **-S** "lines" (could use "files" or "growth" or "shrink" or "net")
   * *plot:* **-f** (files), **-l** (lines), **-g** (line growth), **-s** (line shrink), **-n** (net lines)  
 
-```
+```shell
 # Wherever the install location may be
 source ~/dev/bash/bash-help/churn-tools.sh
 
