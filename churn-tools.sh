@@ -29,7 +29,7 @@ function churn_dates_to_confluence_table() {
 __toggle
   echo "{table-plus}"
   print_date_header "true" | sed 's/|/||/g' | sed '/=/d'
-  git_churn "$@"
+  git_churn_dates "$@"
   echo "{table-plus}"
   __toggle
 }
@@ -38,7 +38,7 @@ function churn_messages_to_confluence_table() {
   __toggle
   echo "{table-plus}"
   print_commit_msg_header "true" | sed 's/|/||/g' | sed '/=/d'
-  git_churn "$@"
+  git_churn_messages "$@"
   echo "{table-plus}"
   __toggle
 }
