@@ -1,5 +1,5 @@
-bash-help
-=========
+churn
+=====
 A summary of file and line modifications, including growth/shrink, to identify code "hot spots".
 Customization of git prompts, code commit statistics and other beneficial bash helper files.
 
