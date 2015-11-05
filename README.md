@@ -21,6 +21,32 @@ to search for commit stats with date ranges, authoring, file name patterns, etc.
 possible to find dates with the largest/smallest churn in addition to what commit message
 prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
 
+#### sort by file modification count
+```shell
+[~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
+[~/bash/bash-help:master(+,*)]$ git_file_churn
+|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
+=====================================================================
+|       1 |     202 |     202 |       0 |      202 | LICENSE-2.0 |
+|       3 |     108 |      54 |      54 |        0 | git-help.sh |
+|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
+|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
+|      18 |     320 |     214 |     106 |      108 | README.md |
+|      51 |    1485 |    1078 |     407 |      671 | Stat Totals |
+```
+
+#### net line growth by author and file type with file pattern(s)
+```shell
+[~/bash/bash-help:master()]$ git_net_growth --after=2014-01-01 --author=dbmillett -- "*.sh"
+|       3 |     108 |      54 |      54 |        0 | git-help.sh |
+|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
+|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
+|      32 |     963 |     662 |     301 |      361 | Stat Totals |
+=====================================================================
+|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
+```
+
+#### available functions
 1. **churn by file:**
   - git_file_churn(), git_line_churn(), git_line_growth(), git_line_shrink()
     git_net_growth(), git_net_shrink(), git_file_sort()
@@ -36,31 +62,6 @@ prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
     git_churn_toggle_total_stats()
 
 **Note** that it does combine stats for file moves and renames.
-
-##### sort by file modification count
-```shell
-[~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
-[~/bash/bash-help:master(+,*)]$ git_file_churn
-|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
-=====================================================================
-|       1 |     202 |     202 |       0 |      202 | LICENSE-2.0 |
-|       3 |     108 |      54 |      54 |        0 | git-help.sh |
-|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
-|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
-|      18 |     320 |     214 |     106 |      108 | README.md |
-|      51 |    1485 |    1078 |     407 |      671 | Stat Totals |
-```
-
-##### net line growth by author and file type with file pattern(s)
-```shell
-[~/bash/bash-help:master()]$ git_net_growth --after=2014-01-01 --author=dbmillett -- "*.sh"
-|       3 |     108 |      54 |      54 |        0 | git-help.sh |
-|      12 |     291 |     215 |      76 |      139 | git-commit-churn.sh |
-|      17 |     564 |     393 |     171 |      222 | git-simple-prompt.sh |
-|      32 |     963 |     662 |     301 |      361 | Stat Totals |
-=====================================================================
-|    file |    line | growth  | shrink  | net(+/-) | filename/stats |
-```
 
 ##### use churn by file/date/message in conjunction with each other
 Sometimes it is helpful to find out what files changed on a specific date
