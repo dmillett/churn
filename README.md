@@ -23,7 +23,6 @@ prefixes were used (ex: feature-id FOO-123 resulted in a lot of file mods).
 
 #### sort by file modification count
 ```shell
-[~/bash/bash-help:master(+,*)]$ git_churn_toggle_header 
 [~/bash/bash-help:master(+,*)]$ git_file_churn
 |    file |    line | growth  | shrink  | net(+/-) | filename/stats |
 =====================================================================
