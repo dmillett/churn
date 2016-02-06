@@ -35,7 +35,7 @@ function git_churn_toggle_total_stats() {
 
 #
 # Print the header (if toggled 'true')
-function print_header() {
+function __print_header() {
 
   if [[ "$PRINT_HEADER" == "true" || "$1" == "true" ]]; then
     awk 'BEGIN { printf "| %7s | %7s | %-7s | %-7s | %7s | filename/stats |\n", "files", "lines", "growth", "shrink", "net(+/-)" }'
@@ -45,7 +45,7 @@ function print_header() {
 
 #
 # Print the header (if toggled 'true')
-function print_footer() {
+function __print_footer() {
 
   if [[ "$PRINT_FOOTER" == "true" || "$1" == "true" ]]; then
     awk 'BEGIN { for(c=0;c<69;c++) printf "="; printf "\n"}'
@@ -98,61 +98,61 @@ function git_churn() {
 #
 # Sort file modification count ascending
 function git_file_churn() {
-  print_header
+  __print_header
   git_churn "$@" | sort -n --key=2
-  print_footer
+  __print_footer
 }
 
 #
 # Sort by line modification count per file ascending
 function git_line_churn() {
-  print_header
+  __print_header
   git_churn "$@" | sort -n --key=4
-  print_footer
+  __print_footer
 }
 
 #
 # Sort by line growth trend/count per file ascending
 function git_line_growth() {
-  print_header
+  __print_header
   git_churn "$@" | sort -n --key=6
-  print_footer
+  __print_footer
 }
 
 #
 # Sort by line shrink trend/count per file ascending
 function git_line_shrink() {
-  print_header
+  __print_header
   git_churn "$@" | sort -n --key=8
-  print_footer
+  __print_footer
 }
 
 #
 # Sort by net growth
 function git_net_growth() {
-  print_header
+  __print_header
   git_churn "$@" | sort -n --key=10
-  print_footer
+  __print_footer
 }
 
 #
 # Sort by net shrink
 function git_net_shrink() {
-  print_header
+  __print_header
   git_churn "$@" | sort -nr --key=10
-  print_footer
+  __print_footer
 }
 
 #
 # Sort by file name (regardless of count)
 function git_file_sort() {
-  print_header
+  __print_header
   git_churn "$@" | sort --key=12
 }
 
 #
 # Print the footer (if toggled 'true')
-function print_date_header() {
+function __print_date_header() {
 
   if [[ "$PRINT_HEADER" == "true" || "$1" == "true" ]]; then
     awk 'BEGIN { printf "| %10s | %7s | %7s | %-7s | %-7s | %7s |\n", "dates", "files", "lines", "growth", "shrink", "net(+/-)" }'
@@ -162,7 +162,7 @@ function print_date_header() {
 
 #
 # Print the footer (if toggled 'true')
-function print_date_footer() {
+function __print_date_footer() {
 
   if [[ "$PRINT_FOOTER" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<65;c++) printf "="; printf "\n"}'
@@ -210,50 +210,57 @@ function git_churn_dates() {
 #
 # Sort file modification count ascending
 function git_date_churn() {
+__print_date_header
   git_churn_dates "$@" | sort -n --key=2
-  print_date_tail
+  __print_date_footer
 }
 
 #
 # Sort by line modification count per file ascending
 function git_file_churn_dates() {
+  __print_date_header
   git_churn_dates "$@" | sort -n --key=4
-  print_date_tail
+  __print_date_footer
 }
 
 #
 # Sort by line modification count per file ascending
 function git_line_churn_dates() {
+  __print_date_header
   git_churn_dates "$@" | sort -n --key=6
-  print_date_tail
+  __print_date_footer
 }
 
 #
 # Sort by line modification count per file ascending
 function git_line_growth_dates() {
+  __print_date_header
   git_churn_dates "$@" | sort -n --key=8
-  print_date_tail
+  __print_date_footer
 }
 
 #
 # Sort by line modification count per file ascending
 function git_line_shrink_dates() {
+  __print_date_header
   git_churn_dates "$@" | sort -n --key=10
-  print_date_tail
+  __print_date_footer
 }
 
 #
 # Sort by line modification count per file ascending
 function git_net_growth_dates() {
+  __print_date_header
   git_churn_dates "$@" | sort -n --key=12
-  print_date_tail
+  __print_date_footer
 }
 
 #
 # Sort by net shrink
 function git_net_shrink_dates() {
+  __print_date_header
   git_churn_dates "$@" | sort -nr --key=12
-  print_date_tail
+  __print_date_footer
 }
 
 COMMIT_MSG_PREFIX=""
@@ -313,7 +320,7 @@ function git_churn_messages() {
 
 #
 # Print the header (if toggled 'true')
-function print_commit_msg_header() {
+function __print_commit_msg_header() {
 
   if [[ "$PRINT_HEADER" == "true" || "$1" == "true" ]]; then
     awk 'BEGIN { printf "| %20s | %7s | %7s | %-7s | %-7s | %7s |\n", "message", "files", "lines", "growth", "shrink", "net(+/-)" }'
@@ -323,7 +330,7 @@ function print_commit_msg_header() {
 
 #
 # Print the footer (if toggled 'true')
-function print_commit_msg_footer() {
+function __print_commit_msg_footer() {
 
   if [[ "$PRINT_FOOTER" == "true" ]]; then
     awk 'BEGIN{ for(c=0;c<75;c++) printf "="; printf "\n"}'
@@ -332,36 +339,43 @@ function print_commit_msg_footer() {
 }
 
 function git_message_churn() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -n --key=2
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
 
 function git_file_churn_messages() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -n --key=4
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
 
 function git_line_churn_messages() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -n --key=6
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
 
 function git_line_growth_messages() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -n --key=8
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
 
 function git_line_shrink_messages() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -n --key=10
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
 
 function git_net_growth_messages() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -n --key=12
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
 
 function git_net_shrink_messages() {
+  __print_commit_msg_header
   git_churn_messages "$@" | sort -nr --key=12
-  print_commit_msg_footer
+  __print_commit_msg_footer
 }
