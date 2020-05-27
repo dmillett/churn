@@ -156,7 +156,7 @@ ERROR_PATTERN="fatal: "
 function git_simple_prompt() {
 
   pscmd="$DEFAULT_PROMPT"
-  status=`git status 2>&1`
+  status=$(git status 2>&1)
   
   # It's a git project 
   if [[ "$GIT_PROMPT_ACTIVE" == "true" && $status =~ $BRANCH_PATTERN ]]; then
@@ -173,35 +173,35 @@ function git_simple_prompt() {
     color="$RESET"
 
     if [[ $status =~ $CHANGED_PATTERN ]]; then
-      message=`build_git_suggestion "$untracked" "$MODIFIED"`
+      message=$(build_git_suggestion "$untracked" "$MODIFIED")
       color="$BLUE"
       branch_color="$BLUE_B" 
     elif [[ $status =~ $MODIFIED_PATTERN ]]; then
-      message=`build_git_suggestion "$untracked" "$MODIFIED"`
+      message=$(build_git_suggestion "$untracked" "$MODIFIED")
       color="$BLUE"
       branch_color="$BLUE_B"
     elif [[ $status =~ $NEW_FILE_PATTERN ]]; then
-      message=`build_git_suggestion "$untracked" "$MODIFIED"`
+      message=$(build_git_suggestion "$untracked" "$MODIFIED")
       color="$BLUE"
       branch_color="$BLUE_B"
     else
 
       merge_remote="false"
-      has_remote=`git remote -v`
+      has_remote=$(git remote -v)
 
       if [[ $CHECK_REMOTE_DIFF == "true" && $has_remote != "" ]]; then
-       diff_remote=`git diff $DEFAULT_REMOTE/$DEFAULT_REMOTE_BRANCH 2>&1`
+       diff_remote=$(git diff $DEFAULT_REMOTE/$DEFAULT_REMOTE_BRANCH 2>&1)
         if [[ $diff_remote != "" ]]; then
           merge_remote="true"
         fi
       fi
  
       if [[ $merge_remote == "true" ]]; then
-        message=`build_git_suggestion "$untracked" "$MERGE"`
+        message=$(build_git_suggestion "$untracked" "$MERGE")
         color="$YELLOW"
         branch_color="$YELLOW_B"
       else
-        message=`build_git_suggestion "$untracked" ""`
+        message=$(build_git_suggestion "$untracked" "")
         color="$GREEN"
         branch_color="$GREEN_B"
       fi
